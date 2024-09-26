@@ -47,6 +47,7 @@ import { computed, shallowRef } from "vue";
 import { useGeneratorStore } from "../stores/generatorStore";
 import Tabs from "./Tabs.vue"; // Your Tabs component
 import Editor from "./Editor.vue"; // Your WYSIWYG editor component
+import { log } from "../utils/logger";
 
 const store = useGeneratorStore();
 const generatedFiles = computed(() => store.generatedCodeFiles);
@@ -58,7 +59,7 @@ files.value = generatedFiles.value.map((file) => ({
 }));
 
 function saveCurrentFile(info) {
-  console.log("Content to save:", info.name, info.cnt);
+  log("Content to save:", info.name, info.cnt);
   const blob = new Blob([info.cnt], { type: "text/plain" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
@@ -73,15 +74,15 @@ function saveCurrentFile(info) {
 function storeChanges(view) {
   const fileIndex = files.value.findIndex((file) => file.name === view.name);
   if (fileIndex !== -1) {
-    files.value[fileIndex].cnt = view.cnt;
+    files.value[fileIndex].content = view.cnt;
   } else {
-    files.value.push({ name: view.name, cnt: view.cnt });
+    files.value.push({ name: view.name, content: view.cnt });
   }
-  console.log("Global file update event:", files.value);
+  log("Global file update event:", files.value);
 }
 
 function saveAll() {
   files.value.forEach((file) => saveCurrentFile(file));
-  console.log("Save all", files.value);
+  log("Save all", files.value);
 }
 </script>

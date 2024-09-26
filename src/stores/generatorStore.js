@@ -11,7 +11,6 @@ export const useGeneratorStore = defineStore("generator", {
     wrapperFile: "",
     includes: [],
     templates: [],
-    cart: [],
   }),
   actions: {
     setDataSource(dataSource) {
@@ -52,13 +51,6 @@ export const useGeneratorStore = defineStore("generator", {
     getTemplates() {
       return this.templates;
     },
-    setCart(items) {
-      this.cart = items;
-    },
-    getCart() {
-      return this.cart;
-    },
-
     getSelectedTemplate() {
       return this.SelectedTemplate;
     },

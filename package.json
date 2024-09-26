@@ -1,5 +1,5 @@
 {
-  "name": "cfcgenarator",
+  "name": "cfcgenerator",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -16,8 +16,7 @@
     "@codemirror/theme-one-dark": "^6.1.2",
     "autoprefixer": "^10.4.20",
     "axios": "^1.7.7",
-    "cfcgenui": "file:",
-    "file-saver": "^2.0.5",
+    "cfcgenerator": "file:",
     "pinia": "^2.2.2",
     "postcss": "^8.4.45",
     "tailwindcss": "^3.4.10",

@@ -26,10 +26,9 @@
 import { ref, defineProps, computed, watch, shallowRef } from "vue";
 import { Codemirror } from "vue-codemirror";
 import { oneDark } from "@codemirror/theme-one-dark";
-//import { EditorState } from "@codemirror/state";
-import { EditorView, basicSetup } from "codemirror";
-import { addToCart } from "../services/cart";
-//import.meta.env.VITE_TINY_MCE_KEY
+import { basicSetup } from "codemirror";
+import { log } from "../utils/logger";
+
 const props = defineProps({
   fileName: {
     type: String,
@@ -65,27 +64,27 @@ const handleReady = (payload) => {
   view.value = payload.view;
   const textContent = payload.view.state.doc.toString();
   emit("update:file-content", { name: fileName.value, cnt: textContent });
-  console.log("handleReady called:", textContent);
+  log("handleReady called:", textContent);
 };
 
 const handleChange = (newValue) => {
   const textContent = newValue.view.state.doc.toString();
   view.value = newValue;
   emit("update:file-content", { name: fileName.value, cnt: textContent });
-  //console.log("handleChange called:", newValue);
-  console.log("handleChange called:", textContent);
+  log("handleChange called:", textContent);
 };
 
 // Watch for changes in the modelValue prop
 watch(content, (newValue) => {
   content.value = newValue;
-  console.log("updated content", content);
+  log("updated content", content);
 });
 
 // Emit the updated content when saving
 function save() {
-  console.log("Save: view :", view.value);
-  emit("save", { name: fileName.value, cnt: view.value.state.doc.toString() });
+  const textContent = view.value.state.doc.toString();
+  log("Save: view :", textContent);
+  emit("save", { name: fileName.value, cnt: textContent });
 }
 </script>
 

@@ -45,7 +45,7 @@
 		<description>Creates Taffy.IO resources for the given tables. Produces Get,Put,Post,Delete verbs based on service call results. Does not create the service.</description>
 	</taffy_srv>	
 	
-	<orm fileNameAppend="ORM" fileType="cfc" style="tag">
+	<orm fileNameAppend="ORM-Tags" fileType="cfc" style="tag">
 		<description>Creates standard ColdFusion ORM files based on selected tables.</description>
 	</orm>
 
