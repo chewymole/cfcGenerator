@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- yet another config -->
+<generator>
+	<bean fileNameAppend="Bean" fileType="cfc" style="tag">
+		<include file="bean/validate.xsl" />
+		<include file="bean/setMemento.xsl" />
+		<include file="bean/getset.xsl" />
+		<include file="bean/dump.xsl" />
+		<description>Creates properties for each column, adds validation and dump and memento functions</description>
+	</bean>
+	<dao fileNameAppend="DAO" filetype="cfc" style="tag">
+		<include file="dao/create.xsl" />
+		<include file="dao/read.xsl" />
+		<include file="dao/update.xsl" />
+		<include file="dao/delete.xsl" />
+		<include file="dao/exists.xsl" />
+		<include file="dao/save.xsl" />
+		<include file="dao/queryRowToStruct.xsl" />
+		<description>Creates data access object with CRUD functions as well as save and exists. Expects a Model.Bean to already exist</description>
+	</dao>	
+	<service fileNameAppend="Service" filetype="cfc" style="tag">
+		<include file="service/createBean.xsl" />
+		<include file="service/getBean.xsl" />
+		<include file="service/getBeans.xsl" />
+		<include file="service/saveBean.xsl" />
+		<include file="service/deleteBean.xsl" />
+		<description>Creates a DAO Bean Service based on the table, requires DAO and Beans to be created as well.</description>
+	</service>
+	
+	<taffy_dao fileNameAppend="Taffy-DAO" filetype="cfc" style="tag">
+		<include file="taffy/dao/get.xsl" />
+		<include file="taffy/dao/put.xsl" />
+		<include file="taffy/dao/post.xsl" />
+		<include file="taffy/dao/delete.xsl" />
+		<include file="taffy/srv/utils.xsl" />
+		<description>Creates Taffy.IO resources for the given tables. Produces Get,Put,Post,Delete verbs based on cfquery results.</description>
+	</taffy_dao>
+	
+	<taffy_srv fileNameAppend="Taffy-Service" filetype="cfc" style="tag">
+		<include file="taffy/srv/get.xsl" />
+		<include file="taffy/srv/put.xsl" />		
+		<include file="taffy/srv/post.xsl" />
+		<include file="taffy/srv/delete.xsl" />
+		<include file="taffy/srv/utils.xsl" />
+		<description>Creates Taffy.IO resources for the given tables. Produces Get,Put,Post,Delete verbs based on service call results. Does not create the service.</description>
+	</taffy_srv>	
+	
+	<orm fileNameAppend="ORM" fileType="cfc" style="tag">
+		<description>Creates standard ColdFusion ORM files based on selected tables.</description>
+	</orm>
+
+	<orm_script fileNameAppend="ORM-Script" fileType="cfc" style="script">
+		<description>Creates standard ColdFusion ORM files based on selected tables.</description>
+	</orm_script>
+</generator>

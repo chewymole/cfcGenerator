@@ -1,0 +1,8 @@
+{
+    "dependencies":{
+        "taffy":"^3.3.0"
+    },
+    "installPaths":{
+        "taffy":"taffy/"
+    }
+}

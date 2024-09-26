@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<generator>
+    <orm fileNameAppend="ORM" fileType="cfc">
+        <include file="orm_script.xsl" />
+        <include file="orm_tag.xsl" />
+    </orm>
+</generator>
