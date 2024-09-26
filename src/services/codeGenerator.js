@@ -23,7 +23,7 @@ async function fetchXSLContent(filename) {
   console.log(`Fetching XSL content for: ${filename}`);
 
   try {
-    const response = await fetch(`/public/xsl/${filename}`);
+    const response = await fetch(`/xsl/${filename}`);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
