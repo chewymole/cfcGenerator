@@ -37,10 +37,10 @@ I have included a [Taffy.io](https://taffy.io/) API that is preconfigured to con
 VITE_API_BASE_URL=http://localhost:8080/api/index.cfm?endpoint=
 ```
 
-The API only has 2 endpoints.
+The API only has 2 endpoints:
 
-`GET /tables`
-Will return all the tables in the default datasource as a structure:
+`GET: /tables`
+Will return all the tables in the selected datasource as a structure:
 
 ```JSON
 {
@@ -61,14 +61,23 @@ Will return all the tables in the default datasource as a structure:
 ![tables endpoint](./public/images/tables-endpoint.png)
 ![tables endpoint](./public/images/tables-endpoint-result.png)
 
-`POST /datasource`
+`POST: /datasource`
 Will return true if the given datasource name is valid and exists.
+
+```JSON
+{
+  "message": "Datasource validated successfully",
+  "success": true
+}
+```
+
 ![ds endpoint](./public/images/datasource-endpoint.png)
 ![ds endpoint](./public/images/datasource-endpoint-result.png)
 
 ## Table of Contents
 
 - [Features](#features)
+- [Languages](#languages)
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
 - [Usage](#usage)
@@ -78,16 +87,36 @@ Will return true if the given datasource name is valid and exists.
 
 ## Features
 
+- Generate Code based on a database table XML
+- Supported Database Types:
+  - MySQL
+  - PostgreSQL
+  - Microsoft SQL Server
+  - Oracle
+  - Informix
+- XSLT Templates for Code Generation
+  - Easy to modify
+  - Simple to add new templates
+  - Supports almost any programming language
+- Included Templates:
+  - Taffy API (Tag and Script)
+  - ORM CFC's
+  - CF DAO's
+  - CF Services
+  - CF Beans
+
+## Languages
+
 - Vue 3 with `<script setup>` SFCs
-- ColdFusion / Lucee backend
-- Taffy.io API for Datasource and Table XML generation
+- ColdFusion / Lucee backend (CFML)
+  - Taffy.io API for Datasource and Table XML generation (JSON/REST)
 
 ## Prerequisites
 
 - Node.js (>= 14.x)
 - npm (>= 6.x)
-- ColdFusion or Lucee server
-- Taffy.io
+- CommandBox, ColdFusion or Lucee server
+  - Taffy.io
 
 ## Installation
 
@@ -108,14 +137,20 @@ Will return true if the given datasource name is valid and exists.
 
 3. Start the development server:
    ```sh
-   npm run dev
+   npm run dev:all
    ```
 
 ### Backend (ColdFusion / Lucee)
 
-1. Ensure you have a ColdFusion or Lucee server running.
-2. Deploy the backend code to your server.
-3. Configure the Taffy.io API as per your requirements.
+1. Ensure you have a CFML server running. Or use your own API server.
+   A. You can use the included CommandBox server by running `npm run api`
+   B. Or deploy the `api` folder to your server.
+   C. Configure the `.env` file to point to your API.
+   D. If you roll your own, use the included code as a starter. The frontend expects the following endpoints:
+   GET:/tables?datasourceName=<datasource name>
+   POST:/datasource { "datasourceName":"<datasource name>" }
+   Use the /resources as a starting point, then review the code in the /model/ for how to parse the different database types and how it generates the table XML.
+2. Configure the Taffy.io API as per your requirements.
 
 ## Usage
 
