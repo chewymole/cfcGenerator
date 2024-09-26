@@ -143,14 +143,15 @@ Will return true if the given datasource name is valid and exists.
 ### Backend (ColdFusion / Lucee)
 
 1. Ensure you have a CFML server running. Or use your own API server.
-   A. You can use the included CommandBox server by running `npm run api`
-   B. Or deploy the `api` folder to your server.
-   C. Configure the `.env` file to point to your API.
-   D. If you roll your own, use the included code as a starter. The frontend expects the following endpoints:
+2. If you are using the included CommandBox server, You MUST setup a valid Datasource. If you are using your own API server, you must know the datasource name.
+3. You can use the included CommandBox server by running `npm run api`
+4. Or deploy the `api` folder to your server.
+5. Configure the `.env` file to point to your API.
+6. If you roll your own, use the included code as a starter.
+   The frontend expects the following endpoints:
    GET:/tables?datasourceName=<datasource name>
    POST:/datasource { "datasourceName":"<datasource name>" }
    Use the /resources as a starting point, then review the code in the /model/ for how to parse the different database types and how it generates the table XML.
-2. Configure the Taffy.io API as per your requirements.
 
 ## Usage
 
