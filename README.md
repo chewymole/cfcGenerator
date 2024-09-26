@@ -155,8 +155,13 @@ Will return true if the given datasource name is valid and exists.
 
 ## Usage
 
-1. Access the Vue 3 frontend at `http://localhost:3000` (or the port specified in your Vite config).
-2. Use the interface to interact with the Taffy.io API and generate ColdFusion code.
+1. Access the Vue 3 frontend at `http://localhost:3000` (or the port specified in your Vite config). Or run `npm build` and deploy the `dist` folder to your server.
+2. Use the interface to Enter the Datasource Name, then select the Tables you want to generate code for, then select the template you want to use.
+3. Click the Generate Code button.
+4. Review the generated code, then click the Save or Save All buttons to download the generated code to your local machine.
+5. From there, review the code in your editor of choice and make the needed adjustments for your environment and deploy to your testing server for review.
+6. Have fun.
+7. I thank my Lord and Savior Jesus Christ for this blessing to be able to share this small part of my life with you. If you have any questions, please feel free to contact me.
 
 ## Contributing
 
