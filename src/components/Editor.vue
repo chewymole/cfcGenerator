@@ -10,7 +10,7 @@
     <codemirror
       :modelValue="content"
       placeholder="code goes here..."
-      :style="{ height: '60%', width: '80%' }"
+      :style="{ maxHeight: '400px', width: '80%' }"
       :autofocus="true"
       :indent-with-tab="true"
       :tab-size="4"
@@ -68,8 +68,11 @@ const handleReady = (payload) => {
 };
 
 const handleChange = (newValue) => {
-  const textContent = newValue.view.state.doc.toString();
   view.value = newValue;
+  let textContent = newValue;
+  if (typeof newValue === "object") {
+    textContent = newValue.view.state.doc.toString();
+  }
   emit("update:file-content", { name: fileName.value, cnt: textContent });
   log("handleChange called:", textContent);
 };

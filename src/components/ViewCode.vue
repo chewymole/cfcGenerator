@@ -7,14 +7,6 @@
 </template> -->
 <template>
   <div>
-    <h2 class="text-lg font-semibold">Code Editor</h2>
-    <p>
-      Selected Template: <strong>{{ selectedTemplate.displayName }}</strong
-      ><br />
-      A {{ selectedTemplate.style }} based format with a
-      {{ selectedTemplate.type }} file extention. <br />
-      {{ selectedTemplate.description }}
-    </p>
     <button
       class="flex items-center bg-blue-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-600 transition duration-200 ml-auto"
       @click="saveAll"
@@ -23,6 +15,15 @@
       <!-- Font Awesome Save Icon -->
       Save All
     </button>
+    <h2 class="text-lg font-semibold">Code Editor</h2>
+    <p>
+      Selected Template: <strong>{{ selectedTemplate.displayName }}</strong
+      ><br />
+      A {{ selectedTemplate.style }} based format with a
+      {{ selectedTemplate.type }} file extention. <br />
+      {{ selectedTemplate.description }}
+    </p>
+
     <Tabs :tabs="generatedFiles">
       <template #default="{ activeTab }">
         <div

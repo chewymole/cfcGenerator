@@ -11,7 +11,7 @@
           'bg-white text-gray-600 hover:bg-blue-100 hover:text-blue-600 border border-gray-300':
             tab.name !== activeTab,
         }"
-        class="cursor-pointer py-3 px-4 text-lg font-large transition-colors duration-200 rounded-t-md"
+        class="cursor-pointer py-1 px-4 text-lg font-large transition-colors duration-200 rounded-t-md"
       >
         {{ tab.tableName }}
       </div>

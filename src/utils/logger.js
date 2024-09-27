@@ -1,4 +1,4 @@
-const DEBUG_MODE = import.meta.env.VITE_DEBUG_MODE === "true";
+const DEBUG_MODE = window.APP_CONFIG?.DEBUG_MODE || false;
 
 export function log(...args) {
   if (DEBUG_MODE) {
