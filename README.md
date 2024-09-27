@@ -17,7 +17,7 @@
  |_____________________|
 ```
 
-Ported from: [CFC Generator](https://github.com/deanlaw/cfcgenerator)
+## Ported from: [CFC Generator](https://github.com/deanlaw/cfcgenerator)
 
 This is my first real VueJS project, so please don't judge me too harshly. I welcome any suggestions!
 
@@ -25,11 +25,21 @@ This project is a Vue 3 front-end with a ColdFusion / Lucee backend and a Taffy.
 
 One of the awesome parts from Dean's original project is that he used XSL style-sheets to generate the resulting code. I have ported his original code to use xml2js and xslt-processor to generate the resulting code on the client side within the VueJS application. This allows you to generate the code on your local machine and arrange the paths and folders how you like, then copy the generated code into your project and or server..
 
+### Improvements:
+
 I improved the yac.XML file that describes the XSL templates, I added a Name, Description, and syntax style attributes. These are displayed in the UI to help you identify the template you want to use.
 
-I removed some of the older template types, and added an ORM template to generate the code for CF ORM code in both Tag and Script syntax and added a Taffy API template to generate an API based on the selected tables.
+I removed some of the older template types, and added an ORM template to generate the code for CF ORM code in both Tag and Script syntax and added a Taffy API template to generate an API based on the selected tables. I have also added CF side caching to the table list per datasource name, generating the code will be faster and not require the server side admin password.
+
+### Note:
+
+I had to add top 200 in the SQL that grabs the table names. The server I am testing with has several thousand tables and it was taking too long to generate the list. 200 was a happy medium for me to still be able to select the datasource and see the list of tables in a reasonable amount of time. If your server has less than 200 tables, you can remove the top 200 in the SQL and it will grab all the tables. But if you are like me and have a ton, you may want to add some filtering to allow you to grab by schema or table prefixes.
+
+### Other features:
 
 These templates are easy to modify to your liking, and you are not limited to using this for ColdFusion, you can use it for any language that you want, just make the new templates and style-sheets.
+
+### API:
 
 I have included a [Taffy.io](https://taffy.io/) API that is preconfigured, and can connect to any datasource configured in your Coldfusion/Lucee Server, given you know the Datasource name. You can use this API or you can use what ever API you want to generate the Table XML and datasource name validation, just modify the .env and config.js files to point to your API. The defualt is:
 
@@ -76,14 +86,19 @@ Will return true if the given datasource name is valid and exists.
 
 ## Table of Contents
 
-- [Features](#features)
-- [Languages](#languages)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Contributing](#contributing)
-- [License](#license)
-- [References](#references)
+- [CFC Generator / API Generator AKA Illudium PU-36 Code Generator v2](#cfc-generator--api-generator-aka-illudium-pu-36-code-generator-v2)
+- [Note:](#note)
+  - [Table of Contents](#table-of-contents)
+  - [Features](#features)
+  - [Languages](#languages)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+    - [Frontend (Vue 3)](#frontend-vue-3)
+    - [Backend (ColdFusion / Lucee)](#backend-coldfusion--lucee)
+  - [Usage](#usage)
+  - [Contributing](#contributing)
+  - [License](#license)
+  - [References](#references)
 
 ## Features
 
