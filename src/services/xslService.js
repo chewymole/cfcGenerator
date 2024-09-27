@@ -1,13 +1,13 @@
 import { ref } from "vue";
 import { useGeneratorStore } from "../stores/generatorStore";
-
 const xslFileMap = ref({});
 
 export async function scanXSLFiles() {
   const store = useGeneratorStore();
 
   try {
-    const response = await fetch("/xsl/yac.xml");
+    const baseUrl = window.APP_CONFIG?.BASE_URL || "/";
+    const response = await fetch(`${baseUrl}xsl/yac.xml`);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }

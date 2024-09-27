@@ -77,9 +77,9 @@ component accessors=true {
                 var result = q.execute().getResult();
                 return result.current_schema;
             case "mssql":
-                q.setSQL("SELECT SCHEMA_NAME()");
+                q.setSQL("SELECT SCHEMA_NAME() AS current_schema");
                 var result = q.execute().getResult();
-                return result[''][1];
+                return result.current_schema;
             // Add cases for other database types as needed
             default:
                 return "";

@@ -93,6 +93,7 @@
                     "binary"="cf_sql_binary",
                     "bit"="cf_sql_bit",
                     "char"="cf_sql_char",
+                    "date"="cf_sql_date",
                     "datetime"="cf_sql_timestamp",
                     "decimal"="cf_sql_decimal",
                     "float"="cf_sql_float",
@@ -188,7 +189,7 @@
                     "character"="cf_sql_char",
                     "varchar"="cf_sql_varchar",
                     "character varying"="cf_sql_varchar",
-                    "text"="cf_sql_longvarchar",
+                    "text"="cf_sql_longvarchar"
                 }
             }
             variables.sqlTypes = o[arguments._dbtype];
@@ -278,6 +279,7 @@
                     "binary"="binary",
                     "bit"="boolean",
                     "char"="string",
+                    "date"="date",
                     "datetime"="date",
                     "decimal"="numeric",
                     "float"="numeric",

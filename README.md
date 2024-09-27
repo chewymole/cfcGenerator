@@ -19,22 +19,22 @@
 
 Ported from: [CFC Generator](https://github.com/deanlaw/cfcgenerator)
 
-This is my first public real VueJS project, so please don't judge me too harshly.
+This is my first real VueJS project, so please don't judge me too harshly. I welcome any suggestions!
 
 This project is a Vue 3 front-end with a ColdFusion / Lucee backend and a Taffy.io API that generates ColdFusion code. The origial project was created by [deanlaw](https://github.com/deanlaw) that used Flash as a frontend, it also required you to have the ColdFusion / Lucee Admin password to generate the code. This version has a Vue 3 frontend and a Taffy.io API that generates ColdFusion code. It does not require the ColdFusion / Lucee Admin password to generate the code. But you must have a valid Datasource configured on your server you plan to generate the code on and you must know the Datasource name.
 
 One of the awesome parts from Dean's original project is that he used XSL style-sheets to generate the resulting code. I have ported his original code to use xml2js and xslt-processor to generate the resulting code on the client side within the VueJS application. This allows you to generate the code on your local machine and arrange the paths and folders how you like, then copy the generated code into your project and or server..
 
-I improved the XML file that describes the templates, I added a Name, Description, syntax style attributes. These are displayed in the UI to help you identify the template you want to use.
+I improved the yac.XML file that describes the XSL templates, I added a Name, Description, and syntax style attributes. These are displayed in the UI to help you identify the template you want to use.
 
-I removed some of the older template types, and added an ORM template to generate the code for ORM code in both Tag and Script syntax and added a Taffy API template to generate an API based on the selected tables.
+I removed some of the older template types, and added an ORM template to generate the code for CF ORM code in both Tag and Script syntax and added a Taffy API template to generate an API based on the selected tables.
 
 These templates are easy to modify to your liking, and you are not limited to using this for ColdFusion, you can use it for any language that you want, just make the new templates and style-sheets.
 
-I have included a [Taffy.io](https://taffy.io/) API that is preconfigured to connect to any datasource configured in your Coldfusion/Lucee Server, given you know the Datasource name. You can use this API or you can use what ever API you want to generate the Table XML and datasource name validation, just modify the .env file to point to your API. The defualt is:
+I have included a [Taffy.io](https://taffy.io/) API that is preconfigured, and can connect to any datasource configured in your Coldfusion/Lucee Server, given you know the Datasource name. You can use this API or you can use what ever API you want to generate the Table XML and datasource name validation, just modify the .env and config.js files to point to your API. The defualt is:
 
 ```
-VITE_API_BASE_URL=http://localhost:8080/api/index.cfm?endpoint=
+API_BASE_URL=http://localhost:8080/api/index.cfm?endpoint=
 ```
 
 The API only has 2 endpoints:
@@ -89,21 +89,21 @@ Will return true if the given datasource name is valid and exists.
 
 - Generate Code based on a database table XML
 - Supported Database Types:
-  - MySQL
-  - PostgreSQL
+  - MySQL (v4 & v5+)
+  - PostgreSQL (coming soon)
   - Microsoft SQL Server
-  - Oracle
-  - Informix
+  - Oracle (incomplete)
+  - Informix (incomplete)
 - XSLT Templates for Code Generation
   - Easy to modify
   - Simple to add new templates
   - Supports almost any programming language
 - Included Templates:
   - Taffy API (Tag and Script)
-  - ORM CFC's
+  - ORM CFC's (Tag and Script)
   - CF DAO's
-  - CF Services
-  - CF Beans
+  - CF Service's
+  - CF Bean's
 
 ## Languages
 
@@ -117,6 +117,7 @@ Will return true if the given datasource name is valid and exists.
 - npm (>= 6.x)
 - CommandBox, ColdFusion or Lucee server
   - Taffy.io
+  - Or any other API that can return the required Table XML
 
 ## Installation
 
@@ -136,6 +137,7 @@ Will return true if the given datasource name is valid and exists.
    ```
 
 3. Start the development server:
+
    ```sh
    npm run dev:all
    ```
@@ -145,13 +147,28 @@ Will return true if the given datasource name is valid and exists.
 1. Ensure you have a CFML server running. Or use your own API server.
 2. If you are using the included CommandBox server, You MUST setup a valid Datasource. If you are using your own API server, you must know the datasource name.
 3. You can use the included CommandBox server by running `npm run api`
-4. Or deploy the `api` folder to your server.
-5. Configure the `.env` file to point to your API.
-6. If you roll your own, use the included code as a starter.
+   1. Or deploy the `api` folder to your server.
+4. Configure the `.env` file to point to your API.
+   1. ```json
+      VITE_DEBUG_MODE=false
+      VITE_API_BASE_URL=http://localhost:8080/index.cfm?endpoint=
+      VITE_APP_BASE_URL=/
+      ```
+5. Configure the `/public/config.js` as well to make sure the base url path to the /xsl file is correct. If you are hosting in a subdirectory, this should be: `/myfolder/path/to/index.html`
+   1. ```json
+      window.APP_CONFIG = {
+        BASE_URL: "/",
+        API_URL: "http://localhost:8080/?endpoint=",
+      };
+      ```
+6. If you roll your own API, use the included code as a starter.
    The frontend expects the following endpoints:
-   GET:/tables?datasourceName=<datasource name>
-   POST:/datasource { "datasourceName":"<datasource name>" }
-   Use the /resources as a starting point, then review the code in the /model/ for how to parse the different database types and how it generates the table XML.
+   `GET:/tables?datasourceName=`<datasource name>
+   `POST:/datasource { "datasourceName":"<datasource name>" }`
+   Use the `/resources` as a starting point, then review the code in the `/model/` for how to parse the different database types and how it generates the table XML.
+7. Path issues:
+   1. If you plan to deploy the /api to a subfolder on your server, review the .env and config.js files. These are needed to point to the correct folder that contains the XML/XSL files. If you get a blank screen, check this first.
+   2. If you deploy to the root folder, just make sure to verify the .env and config.js files are using the correct paths and API url's
 
 ## Usage
 

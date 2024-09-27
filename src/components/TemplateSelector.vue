@@ -33,6 +33,7 @@ import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useGeneratorStore } from "../stores/generatorStore";
 import { getAvailableTemplates } from "../services/templateService";
+import { log, error as logError } from "../utils/logger";
 
 const router = useRouter();
 const store = useGeneratorStore();
@@ -44,9 +45,9 @@ const error = ref("");
 onMounted(async () => {
   try {
     templates.value = await getAvailableTemplates();
-    console.log("Templates loaded:", templates.value);
+    log("Templates loaded:", templates.value);
   } catch (err) {
-    console.error("Error fetching templates:", err);
+    logError("Error fetching templates:", err);
     error.value = "Failed to fetch templates. Please try again.";
   } finally {
     loading.value = false;
@@ -56,11 +57,11 @@ onMounted(async () => {
 async function selectTemplate() {
   store.setSelectedTemplate(selectedTemplate.value);
 
-  console.log("Selected template:", selectedTemplate.value);
+  log("Selected template:", selectedTemplate.value);
 
   try {
     const templateFiles = selectedTemplate.value;
-    console.log("files", templateFiles);
+    log("files", templateFiles);
 
     const wrapperFile = templateFiles.name + ".xsl";
     const includeFiles = templateFiles.includes;
@@ -73,21 +74,21 @@ async function selectTemplate() {
 
     store.setWrapperFile(wrapperFile);
     store.setIncludes(includeFiles);
-    console.log(
+    log(
       `Template ${selectedTemplate.value.displayName} selected with wrapper:`,
       wrapperFile,
       "and includes:",
       includeFiles
     );
   } catch (err) {
-    console.error("Error processing template selection:", err);
+    logError("Error processing template selection:", err);
     error.value = `Failed to process template selection for ${selectedTemplate.value.displayName}. Please try again.`;
   }
 }
 
 function submitSelection() {
   if (selectedTemplate.value.displayName) {
-    console.log("Submitting template:", selectedTemplate.value.displayName);
+    log("Submitting template:", selectedTemplate.value.displayName);
     router.push({ name: "Generate" });
   } else {
     error.value = "Please select a template.";

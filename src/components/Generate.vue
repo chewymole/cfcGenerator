@@ -24,7 +24,7 @@
 import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
 import { useGeneratorStore } from "../stores/generatorStore";
-import { log } from "../utils/logger";
+import { log, error as logError } from "../utils/logger";
 import { generateCode as localGenerateCode } from "../services/codeGenerator";
 
 const store = useGeneratorStore();
@@ -62,7 +62,7 @@ async function generateCode() {
       throw new Error("Generated code is empty or only whitespace");
     }
   } catch (err) {
-    console.error("Error generating code:", err);
+    logError("Error generating code:", err);
     error.value = `Error generating code: ${err.message}`;
     generatedCode.value = "";
   }

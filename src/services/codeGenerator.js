@@ -2,29 +2,12 @@ import { useGeneratorStore } from "../stores/generatorStore";
 import { log, error } from "../utils/logger";
 import { xsltProcess } from "xslt-processor";
 
-export function generateXMLFromTables(tables) {
-  let xml = "<database>";
-  tables.forEach((table) => {
-    xml += `<table name="${table.name}">`;
-    table.columns.forEach((column) => {
-      xml += `<column name="${column.name}" type="${column.type}"/>`;
-    });
-    xml += "</table>";
-  });
-  xml += "</database>";
-  return xml;
-}
-
-export function transformXML(xmlContent, xslContent) {
-  const resultDocument = xsltProcess(xmlContent, xslContent);
-  return resultDocument.toString();
-}
 async function fetchXSLContent(filename) {
   log(`Fetching XSL content for: ${filename}`);
-
+  const baseUrl = window.APP_CONFIG?.BASE_URL || "/";
   try {
     // Use a relative path from the root of the public directory
-    const response = await fetch(`/xsl/${filename}`);
+    const response = await fetch(`${baseUrl}xsl/${filename}`);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -86,7 +69,8 @@ export async function generateCode(template, tables, tablesXML) {
   const store = useGeneratorStore();
 
   try {
-    const templatePath = "/xsl/"; //store.getTemplatePath();
+    const baseUrl = window.APP_CONFIG?.BASE_URL || "/";
+    const templatePath = `${baseUrl}xsl/`; //store.getTemplatePath();
     const includes = store.getIncludes();
 
     const xslContentRaw = await processXSL(

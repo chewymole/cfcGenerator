@@ -37,7 +37,9 @@ export async function loadTemplates() {
   const store = useGeneratorStore();
 
   try {
-    const response = await fetch("/xsl/yac.xml");
+    //const response = await fetch("./xsl/yac.xml");
+    const baseUrl = window.APP_CONFIG?.BASE_URL || "/";
+    const response = await fetch(`${baseUrl}xsl/yac.xml`);
     if (!response.ok) {
       throw new Error(`Failed to fetch YAC XML file: ${response.statusText}`);
     }

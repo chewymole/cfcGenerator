@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && node copy-env.js",
     "serve": "vite preview",
     "api": "cd api && box server start",
     "dev:all": "concurrently \"npm run dev\" \"npm run api\""
