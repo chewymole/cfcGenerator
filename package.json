@@ -1,7 +1,7 @@
 {
   "name": "cfcgenerator",
   "private": true,
-  "version": "1.0.2",
+  "version": "1.0.3",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -22,9 +22,7 @@
     "tailwindcss": "^3.4.10",
     "vue": "^3.4.37",
     "vue-codemirror": "^6.1.1",
-    "vue-router": "^4.4.3",
-    "xml2js": "^0.6.2",
-    "xslt-processor": "^3.0.2"
+    "vue-router": "^4.4.3"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.1.2",

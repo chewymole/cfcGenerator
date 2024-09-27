@@ -6,11 +6,11 @@
 			Runs a delete row on table. 
 			
 			TODO: 	Verify your mappings.. I set varibles instance to your services cfc
-					Assumes your service contains a function named 'new' that handles record inserts and returns the new row
+					Assumes your service contains a function named 'delete' that handles record deletes and returns true on success
 		---&gt;
 		&lt;cftry&gt;
 			&lt;cfset var res = variables.<xsl:value-of select="//bean/@name"/>Service.delete(arguments)/&gt;	
-			&lt;cfcatch type="database"&gt;
+			&lt;cfcatch&gt;
 				&lt;cfreturn rep({result="failed",error=#cfcatch.message#}).withStatus(500) /&gt;
 			&lt;/cfcatch&gt;
 		&lt;/cftry&gt;

@@ -22,11 +22,15 @@
 
     <div class="table-list max-h-60 overflow-y-auto mb-4">
       <div v-for="table in paginatedTables" :key="table" class="mb-2">
-        <label class="flex items-center">
+        <label
+          class="flex items-center"
+          :class="{ 'opacity-50': isDisabled(table) }"
+        >
           <input
             type="checkbox"
             :value="table"
             v-model="selectedTables"
+            :disabled="isDisabled(table)"
             class="mr-2"
           />
           {{ table }}
@@ -53,6 +57,10 @@
         Next
       </button>
     </div>
+
+    <div class="mt-4">
+      Selected: {{ selectedTables.length }} / {{ MAX_SELECTED }}
+    </div>
   </div>
 </template>
 
@@ -73,6 +81,8 @@ const searchQuery = ref("");
 const currentPage = ref(1);
 const itemsPerPage = 10;
 const selectAll = ref(false);
+// Use the MAX_SELECTED value from config.js, with a fallback value of 10
+const MAX_SELECTED = window.APP_CONFIG?.MAX_SELECTED_TABLES || 10;
 
 const filteredTables = computed(() => {
   return props.tables.filter((table) =>
@@ -100,14 +110,33 @@ function nextPage() {
 
 function toggleSelectAll() {
   if (selectAll.value) {
-    selectedTables.value = [...filteredTables.value];
+    const availableSlots = MAX_SELECTED - selectedTables.value.length;
+    const tablesToAdd = filteredTables.value.slice(0, availableSlots);
+    selectedTables.value = [
+      ...new Set([...selectedTables.value, ...tablesToAdd]),
+    ];
   } else {
-    selectedTables.value = [];
+    selectedTables.value = selectedTables.value.filter(
+      (table) => !filteredTables.value.includes(table)
+    );
   }
 }
 
+function isDisabled(table) {
+  return (
+    selectedTables.value.length >= MAX_SELECTED &&
+    !selectedTables.value.includes(table)
+  );
+}
+
 watch(selectedTables, (newValue) => {
-  emit("update:selectedTables", newValue);
+  if (newValue.length > MAX_SELECTED) {
+    selectedTables.value = newValue.slice(0, MAX_SELECTED);
+  }
+  emit("update:selectedTables", selectedTables.value);
+  selectAll.value = filteredTables.value.every((table) =>
+    selectedTables.value.includes(table)
+  );
 });
 
 watch(searchQuery, () => {

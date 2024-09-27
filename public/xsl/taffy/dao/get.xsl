@@ -39,8 +39,7 @@
 				<xsl:for-each select="root/bean/dbtable/column"> &lt;cfif not isNull(arguments.<xsl:value-of select="@name" />)&gt;AND <xsl:value-of select="@name" /> = &lt;cfqueryparam value="#arguments.<xsl:value-of select="@name" />#" CFSQLType="<xsl:value-of select="@cfSqlType" />" /&gt; &lt;/cfif&gt;
 				</xsl:for-each>
 			&lt;/cfquery&gt;
-			&lt;cfcatch type="database"&gt;
-				&lt;!--- leave the bean as is and set an empty query for the conditional logic below ---&gt;
+			&lt;cfcatch&gt;				
 				&lt;cfreturn rep({result="failed",error=cfcatch.message}).withStatus(500)&gt;
 			&lt;/cfcatch&gt;
 		&lt;/cftry&gt;

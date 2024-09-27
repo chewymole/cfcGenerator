@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useGeneratorStore } from "../stores/generatorStore";
-
+import { log, error as logError } from "../utils/logger";
 const API_BASE_URL = window.APP_CONFIG?.API_URL || "/api";
 
 const api = axios.create({
@@ -13,19 +13,19 @@ export const fetchDataSources = async () => {
     const response = await api.get("/datasources");
     return response.data;
   } catch (error) {
-    console.error("Error fetching data sources:", error);
+    logError("Error fetching data sources:", error);
     throw error;
   }
 };
 
 export const fetchTables = async (datasourceName) => {
-  console.log("fetchTables called with datasourceName:", datasourceName);
+  log("fetchTables called with datasourceName:", datasourceName);
   const store = useGeneratorStore();
   try {
     const response = await api.get("/tables", {
       params: { datasourceName },
     });
-    console.log("fetchTables raw response:", response.data);
+    log("fetchTables raw response:", response.data);
 
     if (response.data && response.data.tables) {
       const result = response.data;
@@ -39,7 +39,7 @@ export const fetchTables = async (datasourceName) => {
       throw new Error("Unexpected response format");
     }
   } catch (error) {
-    console.error("Error in fetchTables:", error);
+    logError("Error in fetchTables:", error);
     return {
       success: false,
       message: error.message || "An error occurred while fetching tables",
@@ -51,16 +51,16 @@ function parseXMLResponse(xmlString) {
   const parser = new DOMParser();
   const xmlDoc = parser.parseFromString(xmlString, "text/xml");
 
-  console.log("Parsed XML:", xmlDoc);
+  log("Parsed XML:", xmlDoc);
 
   const tableNodes = xmlDoc.getElementsByTagName("table");
-  console.log("Table nodes:", tableNodes);
+  log("Table nodes:", tableNodes);
 
   const tables = Array.from(tableNodes).map((node) =>
     node.getAttribute("name")
   );
 
-  console.log("Extracted tables:", tables);
+  log("Extracted tables:", tables);
 
   return {
     success: true,
@@ -69,21 +69,16 @@ function parseXMLResponse(xmlString) {
 }
 
 export const generateCode = async (template, tables) => {
-  console.log(
-    "generateCode called with template:",
-    template,
-    "and tables:",
-    tables
-  );
+  log("generateCode called with template:", template, "and tables:", tables);
   try {
     const response = await api.post("/generate", { template, tables });
-    console.log("generateCode response:", response.data);
+    log("generateCode response:", response.data);
     return {
       success: true,
       code: response.data.generatedCode,
     };
   } catch (error) {
-    console.error("Error in generateCode:", error);
+    logError("Error in generateCode:", error);
     return {
       success: false,
       message:
@@ -99,7 +94,7 @@ export const validateDataSource = async (datasourceName) => {
     const response = await api.post("/datasources", { datasourceName });
     return response.data;
   } catch (error) {
-    console.error("Error validating data source:", error);
+    logError("Error validating data source:", error);
     throw error;
   }
 };

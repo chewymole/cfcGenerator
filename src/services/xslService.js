@@ -48,7 +48,6 @@ export async function scanXSLFiles() {
 
     // Store templates in the Vue store
     store.setTemplates(templates);
-    console.log("XSL files scanned and stored:", templates);
   } catch (error) {
     console.error("Error scanning XSL files:", error);
     throw error;
@@ -57,8 +56,6 @@ export async function scanXSLFiles() {
 
 export function getXSLFilePath(filename) {
   scanXSLFiles();
-  console.log("filemap", xslFileMap.value);
-
   return xslFileMap.value.length || null;
 }
 

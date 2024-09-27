@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-
+import { log } from "../utils/logger";
 export const useGeneratorStore = defineStore("generator", {
   state: () => ({
     dataSource: "",
@@ -15,23 +15,23 @@ export const useGeneratorStore = defineStore("generator", {
   actions: {
     setDataSource(dataSource) {
       this.dataSource = dataSource;
-      console.log("Data source set in store:", this.dataSource);
+      log("Data source set in store:", this.dataSource);
     },
     setSelectedTables(tables) {
       this.selectedTables = tables;
-      console.log("Selected tables set in store:", this.selectedTables);
+      log("Selected tables set in store:", this.selectedTables);
     },
     setSelectedTemplate(template) {
       this.selectedTemplate = template;
-      console.log("Template set in store:", this.selectedTemplate);
+      log("Template set in store:", this.selectedTemplate);
     },
     setGeneratedCode(code) {
       this.generatedCode = code;
-      console.log("Generated code set in store");
+      log("Generated code set in store");
     },
     setTablesXML(xml) {
       this.tablesXML = xml;
-      console.log("Tables XML set in store");
+      log("Tables XML set in store");
     },
     setWrapperFile(file) {
       this.wrapperFile = file;

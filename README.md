@@ -41,7 +41,7 @@ These templates are easy to modify to your liking, and you are not limited to us
 
 ### API:
 
-I have included a [Taffy.io](https://taffy.io/) API that is preconfigured, and can connect to any datasource configured in your Coldfusion/Lucee Server, given you know the Datasource name. You can use this API or you can use what ever API you want to generate the Table XML and datasource name validation, just modify the .env and config.js files to point to your API. The defualt is:
+I have included a [Taffy.io](https://taffy.io/) API that is preconfigured, and can connect to any datasource configured in your Coldfusion/Lucee Server, given you know the Datasource name. You can use this API or you can use what ever API you want to generate the Table XML and datasource name validation, just modify the config.js files to point to your API. The defualt is:
 
 ```
 API_BASE_URL=http://localhost:8080/api/index.cfm?endpoint=
@@ -87,7 +87,11 @@ Will return true if the given datasource name is valid and exists.
 ## Table of Contents
 
 - [CFC Generator / API Generator AKA Illudium PU-36 Code Generator v2](#cfc-generator--api-generator-aka-illudium-pu-36-code-generator-v2)
-- [Note:](#note)
+  - [Ported from: CFC Generator](#ported-from-cfc-generator)
+    - [Improvements:](#improvements)
+    - [Note:](#note)
+    - [Other features:](#other-features)
+    - [API:](#api)
   - [Table of Contents](#table-of-contents)
   - [Features](#features)
   - [Languages](#languages)
@@ -185,7 +189,7 @@ Will return true if the given datasource name is valid and exists.
 
 6. Path issues:
 
-   1. If you plan to deploy the /api to a subfolder on your server, review the .env and config.js files. These are needed to point to the correct folder that contains the XML/XSL files. If you get a blank screen, check this first.
+   1. If you plan to deploy the /api to a subfolder on your server, review the config.js files. These are needed to point to the correct folder that contains the XML/XSL files. If you get a blank screen, check this first.
    2. If you deploy to the root folder, just make sure to verify the config.js files are using the correct paths and API url's
    3. If you plan to deploy the /api to a subfolder on your server, review the config.js files. These are needed to point to the correct folder that contains the XML/XSL files. If you get a blank screen, check this first.
    4. If you deploy to the root folder, just make sure to verify the config.js files are using the correct paths and API url's

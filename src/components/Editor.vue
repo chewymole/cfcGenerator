@@ -18,12 +18,12 @@
       @ready="handleReady"
       @change="handleChange"
     />
-    <button class="save-button" @click="save">Save</button>
+    <!-- <button class="save-button" @click="save">Save</button> -->
   </div>
 </template>
 
 <script setup>
-import { ref, defineProps, computed, watch, shallowRef } from "vue";
+import { ref, computed, watch, shallowRef } from "vue";
 import { Codemirror } from "vue-codemirror";
 import { oneDark } from "@codemirror/theme-one-dark";
 import { basicSetup } from "codemirror";

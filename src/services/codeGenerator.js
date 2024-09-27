@@ -1,6 +1,5 @@
 import { useGeneratorStore } from "../stores/generatorStore";
 import { log, error } from "../utils/logger";
-import { xsltProcess } from "xslt-processor";
 
 async function fetchXSLContent(filename) {
   log(`Fetching XSL content for: ${filename}`);

@@ -30,7 +30,7 @@
 		---&gt;
 		&lt;cftry&gt;
 			&lt;cfset qRead = {}/&gt;
-			<xsl:for-each select="root/bean/dbtable/column"> &lt;cfif not isNull(arguments.<xsl:value-of select="@name" />)&gt;&lt;cfset qread["<xsl:value-of select="@name" />"] = arguments.<xsl:value-of select="@name" />/&gt; &lt;/cfif&gt;
+			<xsl:for-each select="root/bean/dbtable/column">&lt;cfif not isNull(arguments.<xsl:value-of select="@name" />)&gt;&lt;cfset qread["<xsl:value-of select="@name" />"] = arguments.<xsl:value-of select="@name" />/&gt; &lt;/cfif&gt;
 			</xsl:for-each>
 			&lt;cfset var res = variables.<xsl:value-of select="//dbtable/@name" />Service.get(qRead)/&gt;
 			

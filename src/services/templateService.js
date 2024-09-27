@@ -49,8 +49,6 @@ export async function loadTemplates() {
 
     // Store templates in the Vue store
     store.setTemplates(templates);
-
-    console.log("Templates loaded and stored:", templates);
     return templates;
   } catch (error) {
     console.error("Error loading templates:", error);
