@@ -103,6 +103,7 @@ Will return true if the given datasource name is valid and exists.
 ## Features
 
 - Generate Code based on a database table XML
+- config.js to control paths, urls.
 - Supported Database Types:
   - MySQL (v4 & v5+)
   - PostgreSQL (coming soon)
@@ -162,28 +163,34 @@ Will return true if the given datasource name is valid and exists.
 1. Ensure you have a CFML server running. Or use your own API server.
 2. If you are using the included CommandBox server, You MUST setup a valid Datasource. If you are using your own API server, you must know the datasource name.
 3. You can use the included CommandBox server by running `npm run api`
+
    1. Or deploy the `api` folder to your server.
-4. Configure the `.env` file to point to your API.
-   1. ```json
-      VITE_DEBUG_MODE=false
-      VITE_API_BASE_URL=http://localhost:8080/index.cfm?endpoint=
-      VITE_APP_BASE_URL=/
-      ```
-5. Configure the `/public/config.js` as well to make sure the base url path to the /xsl file is correct. If you are hosting in a subdirectory, this should be: `/myfolder/path/to/index.html`
+
+4. Configure the `/public/config.js` to make sure the base url path to the /xsl file is correct. If you are hosting in a subdirectory, this should be: `/myfolder/path/to/index.html`
+
    1. ```json
       window.APP_CONFIG = {
-        BASE_URL: "/",
-        API_URL: "http://localhost:8080/?endpoint=",
+      BASE_URL: "/",
+      API_URL: "http://localhost:8080/?endpoint=",
+      DEBUG_MODE:true
       };
       ```
-6. If you roll your own API, use the included code as a starter.
-   The frontend expects the following endpoints:
-   `GET:/tables?datasourceName=`<datasource name>
-   `POST:/datasource { "datasourceName":"<datasource name>" }`
-   Use the `/resources` as a starting point, then review the code in the `/model/` for how to parse the different database types and how it generates the table XML.
-7. Path issues:
+
+5. If you roll your own API, use the included code as a starter.
+
+   1. The frontend expects the following endpoints:
+      `GET:/tables?datasourceName=`<datasource name>
+      `POST:/datasource { "datasourceName":"<datasource name>" }`
+      Use the `/resources` as a starting point, then review the code in the `/model/` for how to parse the different database types and how it generates the table XML.
+
+6. Path issues:
+
    1. If you plan to deploy the /api to a subfolder on your server, review the .env and config.js files. These are needed to point to the correct folder that contains the XML/XSL files. If you get a blank screen, check this first.
-   2. If you deploy to the root folder, just make sure to verify the .env and config.js files are using the correct paths and API url's
+   2. If you deploy to the root folder, just make sure to verify the config.js files are using the correct paths and API url's
+   3. If you plan to deploy the /api to a subfolder on your server, review the config.js files. These are needed to point to the correct folder that contains the XML/XSL files. If you get a blank screen, check this first.
+   4. If you deploy to the root folder, just make sure to verify the config.js files are using the correct paths and API url's
+   5. If you plan to deploy the /api to a subfolder on your server, review the config.js files. These are needed to point to the correct folder that contains the XML/XSL files. If you get a blank screen, check this first.
+   6. If you deploy to the root folder, just make sure to verify the config.js files are using the correct paths and API url's
 
 ## Usage
 
