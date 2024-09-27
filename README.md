@@ -3,7 +3,7 @@
 ```
   _____________________
  |  _________________  |
- | | CFC Generator   | |
+ | |  CFC Generator  | |
  | |_________________| |
  |  ___ ___ ___   ___  |
  | | 7 | 8 | 9 | | + | |
@@ -17,29 +17,48 @@
  |_____________________|
 ```
 
+## Table of Contents
+
+- [CFC Generator / API Generator AKA Illudium PU-36 Code Generator v2](#cfc-generator--api-generator-aka-illudium-pu-36-code-generator-v2)
+  - [Table of Contents](#table-of-contents)
+  - [Ported from: CFC Generator](#ported-from-cfc-generator)
+  - [About:](#about)
+    - [Improvements:](#improvements)
+    - [Note:](#note)
+    - [Other features:](#other-features)
+    - [API:](#api)
+  - [Features](#features)
+  - [Languages](#languages)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+    - [Frontend (Vue 3)](#frontend-vue-3)
+    - [Backend (ColdFusion / Lucee)](#backend-coldfusion--lucee)
+  - [Usage](#usage)
+  - [Contributing](#contributing)
+  - [License](#license)
+  - [References](#references)
+
 ## Ported from: [CFC Generator](https://github.com/deanlaw/cfcgenerator)
 
 This is my first real VueJS project, so please don't judge me too harshly. I welcome any suggestions!
 
-This project is a Vue 3 front-end with a ColdFusion / Lucee backend and a Taffy.io API that generates ColdFusion code. The origial project was created by [deanlaw](https://github.com/deanlaw) that used Flash as a frontend, it also required you to have the ColdFusion / Lucee Admin password to generate the code. This version has a Vue 3 frontend and a Taffy.io API that generates ColdFusion code. It does not require the ColdFusion / Lucee Admin password to generate the code. But you must have a valid Datasource configured on your server you plan to generate the code on and you must know the Datasource name.
+## About:
 
-One of the awesome parts from Dean's original project is that he used XSL style-sheets to generate the resulting code. I have ported his original code to use xml2js and xslt-processor to generate the resulting code on the client side within the VueJS application. This allows you to generate the code on your local machine and arrange the paths and folders how you like, then copy the generated code into your project and or server..
+This project is a Vue 3 front-end with a CFML backend that generates code for the selected datasource and table(s). The origial project was created by [deanlaw](https://github.com/deanlaw) that used Flash as a front-end, it also required you to have the CFML Admin password to generate the code.
+
+This version has a Vue 3 frontend and comes with an optional Taffy.io API that delivers the database schema. It does not require the CFML Admin password to work. But you must have a valid Datasource configured on the server you plan to connect to and you must know the Datasource name.
+
+One of the awesome parts from Dean's original project is that he used XSL style-sheets to generate the resulting code with XSL Transform. I have ported his original concept to JS to use the DOMParser() to Transform the XLS on the client side. This allows you to generate the code on your local machine and arrange the paths and folders how you like.
 
 ### Improvements:
 
-I improved the yac.XML file that describes the XSL templates, I added a Name, Description, and syntax style attributes. These are displayed in the UI to help you identify the template you want to use.
+I improved the XML index file (yac.XML) that describes the templates. I added a Name, Description, and syntax style attributes. These are displayed in the UI to help the user identify what the template will be building.
 
-I removed some of the older template types, and added an ORM template to generate the code for CF ORM code in both Tag and Script syntax and added a Taffy API template to generate an API based on the selected tables. I have also added CF side caching to the table list per datasource name, generating the code will be faster and not require the server side admin password.
+I removed some of the older template types, and added an CF ORM template to generate code in both Tag and Script syntax and two Taffy API templates. On the backend, I added server side caching to the table list per datasource name to cache the database schema after the first run.
 
-### Note:
+I set a limit on the total tables returned, since this could lead to time-out requests. I may add table filtering in a feature release. But for now, its limited, feel free to remove this if you need more than 200 tables returned.
 
-I had to add top 200 in the SQL that grabs the table names. The server I am testing with has several thousand tables and it was taking too long to generate the list. 200 was a happy medium for me to still be able to select the datasource and see the list of tables in a reasonable amount of time. If your server has less than 200 tables, you can remove the top 200 in the SQL and it will grab all the tables. But if you are like me and have a ton, you may want to add some filtering to allow you to grab by schema or table prefixes.
-
-### Other features:
-
-These templates are easy to modify to your liking, and you are not limited to using this for ColdFusion, you can use it for any language that you want, just make the new templates and style-sheets.
-
-### API:
+API:
 
 I have included a [Taffy.io](https://taffy.io/) API that is preconfigured, and can connect to any datasource configured in your Coldfusion/Lucee Server, given you know the Datasource name. You can use this API or you can use what ever API you want to generate the Table XML and datasource name validation, just modify the config.js files to point to your API. The defualt is:
 
@@ -84,26 +103,6 @@ Will return true if the given datasource name is valid and exists.
 ![ds endpoint](./public/images/datasource-endpoint.png)
 ![ds endpoint](./public/images/datasource-endpoint-result.png)
 
-## Table of Contents
-
-- [CFC Generator / API Generator AKA Illudium PU-36 Code Generator v2](#cfc-generator--api-generator-aka-illudium-pu-36-code-generator-v2)
-  - [Ported from: CFC Generator](#ported-from-cfc-generator)
-    - [Improvements:](#improvements)
-    - [Note:](#note)
-    - [Other features:](#other-features)
-    - [API:](#api)
-  - [Table of Contents](#table-of-contents)
-  - [Features](#features)
-  - [Languages](#languages)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-    - [Frontend (Vue 3)](#frontend-vue-3)
-    - [Backend (ColdFusion / Lucee)](#backend-coldfusion--lucee)
-  - [Usage](#usage)
-  - [Contributing](#contributing)
-  - [License](#license)
-  - [References](#references)
-
 ## Features
 
 - Generate Code based on a database table XML
@@ -119,11 +118,15 @@ Will return true if the given datasource name is valid and exists.
   - Simple to add new templates
   - Supports almost any programming language
 - Included Templates:
-  - Taffy API (Tag and Script)
+  - Taffy API (DAO and Service)
   - ORM CFC's (Tag and Script)
   - CF DAO's
   - CF Service's
   - CF Bean's
+
+### Other features:
+
+These templates are easy to modify to your liking, and you are not limited to using this for ColdFusion, you can use it for any language that you want, just make the new templates and style-sheets.
 
 ## Languages
 
