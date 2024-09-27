@@ -1,4 +1,4 @@
-# CFC Generator / API Generator AKA Illudium PU-36 Code Generator v2
+# CFC Generator / API Generator
 
 ```
   _____________________
@@ -19,15 +19,14 @@
 
 ## Table of Contents
 
-- [CFC Generator / API Generator AKA Illudium PU-36 Code Generator v2](#cfc-generator--api-generator-aka-illudium-pu-36-code-generator-v2)
+- [CFC Generator / API Generator](#cfc-generator--api-generator)
   - [Table of Contents](#table-of-contents)
   - [Ported from: CFC Generator](#ported-from-cfc-generator)
   - [About:](#about)
     - [Improvements:](#improvements)
-    - [Note:](#note)
-    - [Other features:](#other-features)
     - [API:](#api)
   - [Features](#features)
+    - [Other features:](#other-features)
   - [Languages](#languages)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
@@ -58,7 +57,7 @@ I removed some of the older template types, and added an CF ORM template to gene
 
 I set a limit on the total tables returned, since this could lead to time-out requests. I may add table filtering in a feature release. But for now, its limited, feel free to remove this if you need more than 200 tables returned.
 
-API:
+### API:
 
 I have included a [Taffy.io](https://taffy.io/) API that is preconfigured, and can connect to any datasource configured in your Coldfusion/Lucee Server, given you know the Datasource name. You can use this API or you can use what ever API you want to generate the Table XML and datasource name validation, just modify the config.js files to point to your API. The defualt is:
 
@@ -106,7 +105,7 @@ Will return true if the given datasource name is valid and exists.
 ## Features
 
 - Generate Code based on a database table XML
-- config.js to control paths, urls.
+- config.js to control paths, urls, debug, max tables.
 - Supported Database Types:
   - MySQL (v4 & v5+)
   - PostgreSQL (coming soon)

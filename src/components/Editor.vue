@@ -63,7 +63,7 @@ const view = shallowRef();
 const handleReady = (payload) => {
   view.value = payload.view;
   const textContent = payload.view.state.doc.toString();
-  emit("update:file-content", { name: fileName.value, cnt: textContent });
+  emit("update:file-content", { fileName: fileName.value, code: textContent });
   log("handleReady called:", textContent);
 };
 
@@ -73,7 +73,7 @@ const handleChange = (newValue) => {
   if (typeof newValue === "object") {
     textContent = newValue.view.state.doc.toString();
   }
-  emit("update:file-content", { name: fileName.value, cnt: textContent });
+  emit("update:file-content", { fileName: fileName.value, code: textContent });
   log("handleChange called:", textContent);
 };
 

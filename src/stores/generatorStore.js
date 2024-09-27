@@ -27,7 +27,7 @@ export const useGeneratorStore = defineStore("generator", {
     },
     setGeneratedCode(code) {
       this.generatedCode = code;
-      log("Generated code set in store");
+      log("Generated code set in store", code);
     },
     setTablesXML(xml) {
       this.tablesXML = xml;
@@ -56,6 +56,16 @@ export const useGeneratorStore = defineStore("generator", {
     },
     setGeneratedCodeFiles(files) {
       this.generatedCodeFiles = files;
+    },
+    setGeneratedCodeFile(fileName, content) {
+      const fileIndex = this.generatedCodeFiles.findIndex(
+        (file) => file.tableName === fileName
+      );
+      if (fileIndex !== -1) {
+        this.generatedCodeFiles[fileIndex].code = content;
+      } else {
+        this.generatedCodeFiles.push({ tableName: fileName, code: content });
+      }
     },
     getGeneratedCodeFiles() {
       return this.generatedCodeFiles;

@@ -3,7 +3,20 @@
     <div
       class="menu-bar flex justify-between items-center mb-4 bg-gray-100 p-4"
     >
-      <h2 class="text-lg font-semibold">Code Editor</h2>
+      <div class="flex justify-between items-center mb-4" style="width: 80%;">
+        <h2 class="text-lg font-semibold">Code Editor</h2>
+        <div v-if="selectedTemplate" class="text-center">
+          <h3 class="text-center">{{ selectedTemplate.displayName }}</h3>
+          <span class="text-sm text-gray-600 ml-2">
+            ({{ selectedTemplate.style }} based)
+          </span>
+          <p class="text-sm text-gray-600">
+            {{ selectedTemplate.description }}
+          </p>
+        </div>
+        <div></div>
+        <!-- Empty div to balance the flex layout -->
+      </div>
       <div>
         <button
           class="bg-blue-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-600 transition duration-200 mr-2"
@@ -102,14 +115,9 @@ function saveCurrentFile() {
 }
 
 function storeChanges(view) {
-  log("Storing changes:", view);
-  const fileIndex = generatedFiles.value.findIndex(
-    (file) => file.tableName === view.name
-  );
-  if (fileIndex !== -1) {
-    store.setGeneratedCode(view.name, view.content);
-  }
-  log("Updated files:", generatedFiles.value);
+  log("-----Storing changes:", view);
+  store.setGeneratedCodeFile(view.fileName, view.code);
+  log("-----Updated file:", generatedFiles.value);
 }
 
 function saveAll() {

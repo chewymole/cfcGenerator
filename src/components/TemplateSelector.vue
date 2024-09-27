@@ -6,25 +6,29 @@
     <div v-else-if="templates.length === 0" class="text-gray-600">
       No templates available.
     </div>
-    <div v-else>
-      <select
-        v-model="selectedTemplate"
-        @change="selectTemplate"
-        class="w-full p-2 border rounded"
+    <div
+      v-else
+      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
+    >
+      <div
+        v-for="template in templates"
+        :key="template.name"
+        class="border rounded p-4 cursor-pointer hover:bg-gray-100"
+        :class="{ 'bg-blue-100': selectedTemplate === template }"
+        @click="selectTemplate(template)"
       >
-        <option value="">Select a template</option>
-        <option v-for="template in templates" :key="template" :value="template">
-          {{ template.displayName }}: {{ template.style }} based format.
-          {{ template.description }}
-        </option>
-      </select>
-      <button
-        @click="submitSelection"
-        class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-      >
-        Continue
-      </button>
+        <h3 class="font-bold">{{ template.displayName }}</h3>
+        <p>{{ template.style }} based format</p>
+        <p class="text-sm text-gray-600">{{ template.description }}</p>
+      </div>
     </div>
+    <button
+      @click="submitSelection"
+      class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+      :disabled="!selectedTemplate"
+    >
+      Continue
+    </button>
   </div>
 </template>
 
@@ -54,40 +58,38 @@ onMounted(async () => {
   }
 });
 
-async function selectTemplate() {
-  store.setSelectedTemplate(selectedTemplate.value);
+function selectTemplate(template) {
+  selectedTemplate.value = template;
+  store.setSelectedTemplate(template);
 
-  log("Selected template:", selectedTemplate.value);
+  log("Selected template:", template);
 
   try {
-    const templateFiles = selectedTemplate.value;
-    log("files", templateFiles);
-
-    const wrapperFile = templateFiles.name + ".xsl";
-    const includeFiles = templateFiles.includes;
+    const wrapperFile = template.name + ".xsl";
+    const includeFiles = template.includes;
 
     if (!wrapperFile) {
       throw new Error(
-        `Wrapper XSL file not found for template: ${selectedTemplate.value.displayName}`
+        `Wrapper XSL file not found for template: ${template.displayName}`
       );
     }
 
     store.setWrapperFile(wrapperFile);
     store.setIncludes(includeFiles);
     log(
-      `Template ${selectedTemplate.value.displayName} selected with wrapper:`,
+      `Template ${template.displayName} selected with wrapper:`,
       wrapperFile,
       "and includes:",
       includeFiles
     );
   } catch (err) {
     logError("Error processing template selection:", err);
-    error.value = `Failed to process template selection for ${selectedTemplate.value.displayName}. Please try again.`;
+    error.value = `Failed to process template selection for ${template.displayName}. Please try again.`;
   }
 }
 
 function submitSelection() {
-  if (selectedTemplate.value.displayName) {
+  if (selectedTemplate.value) {
     log("Submitting template:", selectedTemplate.value.displayName);
     router.push({ name: "Generate" });
   } else {
