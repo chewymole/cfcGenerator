@@ -1,9 +1,9 @@
-# CFC Generator / API Generator
+# Code Generator
 
 ```
   _____________________
  |  _________________  |
- | |  CFC Generator  | |
+ | | Code Generator  | |
  | |_________________| |
  |  ___ ___ ___   ___  |
  | | 7 | 8 | 9 | | + | |
@@ -47,7 +47,7 @@ This project is a Vue 3 front-end with a CFML backend that generates code for th
 
 This version has a Vue 3 frontend and comes with an optional Taffy.io API that delivers the database schema. It does not require the CFML Admin password to work. But you must have a valid Datasource configured on the server you plan to connect to and you must know the Datasource name.
 
-One of the awesome parts from Dean's original project is that he used XSL style-sheets to generate the resulting code with XSL Transform. I have ported his original concept to JS to use the DOMParser() to Transform the XLS on the client side. This allows you to generate the code on your local machine and arrange the paths and folders how you like.
+One of the awesome parts from Dean's original project is that he used XSL style-sheets to generate the resulting code with XSL Transform. I have ported his original concept to JS to use the DOMParser() to Transform the XSL on the client side. This allows you to generate the code on your local machine and arrange the paths and folders how you like.
 
 ### Improvements:
 
