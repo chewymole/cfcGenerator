@@ -1,7 +1,7 @@
 # Code Generator
 
 ```
-  _____________________
+_____________________
  |  _________________  |
  | | Code Generator  | |
  | |_________________| |
@@ -53,9 +53,13 @@ One of the awesome parts from Dean's original project is that he used XSL style-
 
 I improved the XML index file (yac.XML) that describes the templates. I added a Name, Description, and syntax style attributes. These are displayed in the UI to help the user identify what the template will be building.
 
+I updated the structure of the xml, now every main element is named node, then you can specify the template as an attribute. On the front end, i included a few icons from [vscode-icons](https://github.com/vscode-icons/vscode-icons/tree/master/icons), feel free to add more as you need other file types.
+
 I removed some of the older template types, and added an CF ORM template to generate code in both Tag and Script syntax and two Taffy API templates. On the backend, I added server side caching to the table list per datasource name to cache the database schema after the first run.
 
 I set a limit on the total tables returned, since this could lead to time-out requests. I may add table filtering in a feature release. But for now, its limited, feel free to remove this if you need more than 200 tables returned.
+
+There is currently a limit of 1 file created per table. I may revisit this limitation later to address, but for now, you may need to run the tool once for one set of files, and again for a different type.
 
 ### API:
 
