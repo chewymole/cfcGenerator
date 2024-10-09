@@ -15,9 +15,7 @@
 			<cfthrow message="you must provide a dsn" />
 		</cfif>
 		<cfquery name="qAllTables" datasource="#variables.dsn#">
-			SELECT owner
-        ,  TABLE_NAME
-        , 'TABLE'   TABLE_TYPE
+			SELECT owner,TABLE_NAME,'TABLE' TABLE_TYPE
 			FROM all_tables
 			order by owner, TABLE_NAME
 		</cfquery>

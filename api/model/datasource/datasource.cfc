@@ -59,7 +59,25 @@ component accessors=true {
             } catch (any e) {
                 // Not Oracle, continue to next check
             }
+
+            // DB2
+            try {
+                q.setSQL("SELECT * FROM sysibm.sysdummy1");
+                var result = q.execute().getResult();
+                if (find("db2", lCase(result.version))) return "db2";
+            } catch (any e) {
+                // Not DB2, continue to next check
+            }
             
+            // Informix
+            try {
+                q.setSQL("SELECT * FROM systables WHERE tabid = 1");
+                var result = q.execute().getResult();
+                if (find("informix", lCase(result.version))) return "informix";
+            } catch (any e) {
+                // Not Informix, continue to next check
+            }
+
             // If we still can't determine the type, throw an error
             throw("Unable to determine database type");
         }
@@ -80,7 +98,22 @@ component accessors=true {
                 q.setSQL("SELECT SCHEMA_NAME() AS current_schema");
                 var result = q.execute().getResult();
                 return result.current_schema;
-            // Add cases for other database types as needed
+            case "oracle":
+                q.setSQL("SELECT SYS_CONTEXT('USERENV', 'CURRENT_SCHEMA') AS current_schema FROM dual");
+                var result = q.execute().getResult();
+                return result.current_schema;
+            case "postgresql":
+                q.setSQL("SELECT CURRENT_SCHEMA AS current_schema");
+                var result = q.execute().getResult();
+                return result.current_schema;
+            case "db2":
+                q.setSQL("SELECT CURRENT SCHEMA AS current_schema FROM sysibm.sysdummy1");
+                var result = q.execute().getResult();
+                return result.current_schema;
+            case "informix":
+                q.setSQL("SELECT CURRENT SCHEMA AS current_schema FROM systables WHERE tabid = 1");
+                var result = q.execute().getResult();
+                return result.current_schema;
             default:
                 return "";
         }

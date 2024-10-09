@@ -15,8 +15,8 @@
         <cfargument name="_dbtype" required="true" type="string" hint="the DBMS Name to work with"/>
         <cfset variables.dsn = arguments._dsn/>
         <cfset variables.dbtype = arguments._dbtype/>
-        <cfset sqlType(arguments._dbtype)/>
-        <cfset cfType(arguments._dbtype)/>
+        <cfset _sqlType(arguments._dbtype)/>
+        <cfset _cfType(arguments._dbtype)/>
         <cfreturn this/>
     </cffunction>
 
@@ -68,7 +68,7 @@
         </cfif>
     </cffunction>
 
-    <cffunction name="sqlType" access="private">
+    <cffunction name="_sqlType" access="private">
         <cfargument name="_dbtype" required="true" type="string"/>
         <cfscript>
             var o = {
@@ -196,7 +196,7 @@
         </cfscript>
     </cffunction>
 
-    <cffunction name="cfType" access="private">
+    <cffunction name="_cfType" access="private">
         <cfargument name="_dbtype" required="true" type="string"/>
         <cfscript>
             var o = {                

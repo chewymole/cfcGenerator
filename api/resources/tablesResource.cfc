@@ -27,13 +27,20 @@ component extends="taffy.core.resource" taffy_uri="/tables" {
             var tableList = [];
             var dsObj = new model.datasource.datasource(datasourceName);
             var dbType = dsObj.getDBType();
-            var dbms = dsObj.getDBMS();
+            //var dbms = dsObj.getDBMS();
             var schema = dsObj.getSchema();
             //var tableObject = new model.table.table();
 
             if (len(trim(arguments.tableName))) {
                 arrayAppend(tableList,arguments.tableName);
             } else {
+                if(len(dbType) AND listFindNoCase("mysql,mssql,oracle,postgresql,db2,informix", dbType)) {
+                    var dt = createObject("component","model.datasource.#dbType#").init(datasourceName);
+                    tableList = dt.getTables(datasourceName, schema);
+                } else {
+                    throw("Unsupported database type: " & dbType);
+                }
+                /*
                 switch (dbType) {
                     case "mysql":
                         tableList = getMySQLTables(datasourceName);
@@ -44,17 +51,27 @@ component extends="taffy.core.resource" taffy_uri="/tables" {
                     case "oracle":
                         tableList = getOracleTables(datasourceName);
                     break;
+                    case "postgresql":
+                        tableList = getPostgreSQLTables(datasourceName);
+                    break;
+                    case "db2":
+                        tableList = getDB2Tables(datasourceName);
+                    break;
+                    case "informix":
+                        tableList = getInformixTables(datasourceName);
+                    break;
                 // Add cases for other database types as needed
                 default:
                     throw("Unsupported database type: " & dbType);
                 }
+                */
             }
             
             if (arrayLen(tableList)) {
                 tableList.each(function(t) {
-                    dbms.setTable(t);
-                    dbms.setComponentPath("model." & t);
-                    arrayAppend(tables, dbms.getTableXML());
+                    dt.setTable(t);
+                    dt.setComponentPath("model." & t);
+                    arrayAppend(tables, dt.getTableXML());
                     return true;
                 },true,2);
                 
