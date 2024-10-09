@@ -4,7 +4,7 @@ export const useGeneratorStore = defineStore("generator", {
   state: () => ({
     dataSource: "",
     selectedTables: [],
-    selectedTemplate: "",
+    selectedTemplate: null,
     generatedCode: "",
     generatedCodeFiles: [],
     tablesXML: "",

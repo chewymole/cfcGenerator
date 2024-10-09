@@ -35,7 +35,7 @@ function decodeXSLContent(content) {
 
 async function processXSL(template, includes, templatePath) {
   try {
-    const wrapperXSL = await fetchXSLContent(`${template}.xsl`, templatePath);
+    const wrapperXSL = await fetchXSLContent(`${template}`, templatePath);
     const decodedWrapperXSL = wrapperXSL;
 
     let innerFunctions = "";
