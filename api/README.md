@@ -7,11 +7,10 @@ This folder contains the ColdFusion API for the Code Generator project using Taf
 1. Ensure you have CommandBox installed.
 2. Open a terminal and navigate to this `/api` folder.
 3. Run the following command to start the server:
-
    ```
+   box server install
    box server start
    ```
-
 4. The API will be available at `http://localhost:8080/api`.
 
 ## API Endpoints
