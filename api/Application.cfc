@@ -15,7 +15,7 @@ component extends="taffy.core.api" {
 
     function onRequestStart(string targetPath) {
         application.cors.handleRequest();
-        cfsetting( requestTimeout = 180 );
+        cfsetting( requestTimeout = 1800 );
         return super.onRequestStart(arguments.targetPath);
     }
 }
