@@ -1,15 +1,14 @@
 {
-    "app":{
-        "cfengine":"lucee@5.3.8+205",
-        "serverHomeDirectory":"../.engine"
+  "app": {
+    "cfengine": "lucee@5.3.8+205",
+    "serverHomeDirectory": "../.engine"
+  },
+  "web": {
+    "http": {
+      "port": 8080
     },
-    "web":{
-        "http":{
-            "port":8080
-        },
-        "rewrites":{
-            "enable":true
-        }
+    "rewrites": {
+      "enable": true
     },
     "allowedExt": ["xsl"]
   },
