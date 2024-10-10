@@ -1,55 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- yet another config -->
 <generator>
-	<node fileNameAppend="Bean" fileType="cfc" style="tag" language="cfml" template="bean.xsl">
-		<include file="bean/validate.xsl" />
-		<include file="bean/setMemento.xsl" />
-		<include file="bean/getset.xsl" />
-		<include file="bean/dump.xsl" />
-		<description>Creates properties for each column, adds validation and dump and memento functions</description>
-	</node>
-	<node fileNameAppend="DAO" filetype="cfc" style="tag" language="cfml" template="dao.xsl">
-		<include file="dao/create.xsl" />
-		<include file="dao/read.xsl" />
-		<include file="dao/update.xsl" />
-		<include file="dao/delete.xsl" />
-		<include file="dao/exists.xsl" />
-		<include file="dao/save.xsl" />
-		<include file="dao/queryRowToStruct.xsl" />
-		<description>Creates data access object with CRUD functions as well as save and exists. Expects a Model.Bean to already exist</description>
-	</node>	
-	<node fileNameAppend="Service" filetype="cfc" style="tag" language="cfml" template="service.xsl">
-		<include file="service/createBean.xsl" />
-		<include file="service/getBean.xsl" />
-		<include file="service/getBeans.xsl" />
-		<include file="service/saveBean.xsl" />
-		<include file="service/deleteBean.xsl" />
-		<description>Creates a DAO Bean Service based on the table, requires DAO and Beans to be created as well.</description>
-	</node>
-	
-	<node fileNameAppend="Taffy-DAO" filetype="cfc" style="tag" language="cfml" template="taffy_dao.xsl">
-		<include file="taffy/dao/get.xsl" />
-		<include file="taffy/dao/put.xsl" />
-		<include file="taffy/dao/post.xsl" />
-		<include file="taffy/dao/delete.xsl" />
-		<include file="taffy/srv/utils.xsl" />
-		<description>Creates Taffy.IO resources for the given tables. Produces Get,Put,Post,Delete verbs based on cfquery results.</description>
-	</node>
-	
-	<node fileNameAppend="Taffy-Service" filetype="cfc" style="tag" language="cfml" template="taffy_srv.xsl">
-		<include file="taffy/srv/get.xsl" />
-		<include file="taffy/srv/put.xsl" />		
-		<include file="taffy/srv/post.xsl" />
-		<include file="taffy/srv/delete.xsl" />
-		<include file="taffy/srv/utils.xsl" />
-		<description>Creates Taffy.IO resources for the given tables. Produces Get,Put,Post,Delete verbs based on service call results. Does not create the service.</description>
-	</node>	
-	
-	<node fileNameAppend="ORM-Tags" fileType="cfc" style="tag" language="cfml" template="orm.xsl">
-		<description>Creates standard ColdFusion ORM files based on selected tables.</description>
-	</node>
+  <category name="cfml" icon="file_type_cfc.svg">
+    <subcategory name="Model">
+      <template name="Bean" filetype="cfc" style="tag" template="cfml/bean.xsl">
+        <include file="cfml/bean/validate.xsl" />
+        <include file="cfml/bean/setMemento.xsl" />
+        <include file="cfml/bean/getset.xsl" />
+        <include file="cfml/bean/dump.xsl" />
+        <description>Creates properties for each column, adds validation and dump and memento functions</description>
+      </template>
+    </subcategory>
+    <subcategory name="DAO">
+      <template name="DAO" filetype="cfc" style="tag" template="cfml/dao.xsl">
+        <include file="cfml/dao/create.xsl" />
+        <include file="cfml/dao/read.xsl" />
+        <include file="cfml/dao/update.xsl" />
+        <include file="cfml/dao/delete.xsl" />
+        <include file="cfml/dao/exists.xsl" />
+        <include file="cfml/dao/save.xsl" />
+        <include file="cfml/dao/queryRowToStruct.xsl" />
+        <description>Creates data access object with CRUD functions as well as save and exists. Expects a Model.Bean to already exist</description>
+      </template>
+    </subcategory>
+    <subcategory name="Service">
+      <template name="Service" filetype="cfc" style="tag" template="cfml/service.xsl">
+        <include file="cfml/service/createBean.xsl" />
+        <include file="cfml/service/getBean.xsl" />
+        <include file="cfml/service/getBeans.xsl" />
+        <include file="cfml/service/saveBean.xsl" />
+        <include file="cfml/service/deleteBean.xsl" />
+        <description>Creates a DAO Bean Service based on the table, requires DAO and Beans to be created as well.</description>
+      </template>
+    </subcategory>
+    <subcategory name="API">
+      <template name="Taffy-DAO" filetype="cfc" style="tag" template="cfml/taffy_dao.xsl">
+        <include file="cfml/taffy/dao/get.xsl" />
+        <include file="cfml/taffy/dao/put.xsl" />
+        <include file="cfml/taffy/dao/post.xsl" />
+        <include file="cfml/taffy/dao/delete.xsl" />
+        <include file="cfml/taffy/srv/utils.xsl" />
+        <description>Creates Taffy.IO resources for the given tables. Produces Get,Put,Post,Delete verbs based on cfquery results.</description>
+      </template>
+      <template name="Taffy-Service" filetype="cfc" style="tag" template="cfml/taffy_srv.xsl">
+        <include file="cfml/taffy/srv/get.xsl" />
+        <include file="cfml/taffy/srv/put.xsl" />		
+        <include file="cfml/taffy/srv/post.xsl" />
+        <include file="cfml/taffy/srv/delete.xsl" />
+        <include file="cfml/taffy/srv/utils.xsl" />
+        <description>Creates Taffy.IO resources for the given tables. Produces Get,Put,Post,Delete verbs based on service call results. Does not create the service.</description>
+      </template>
+    </subcategory>
+    <subcategory name="ORM">
+      <template name="ORM-Tags" filetype="cfc" style="tag" template="cfml/orm.xsl">
+        <description>Creates standard ColdFusion ORM files based on selected tables.</description>
+      </template>
+      <template name="ORM-Script" filetype="cfc" style="script" template="cfml/orm_script.xsl">
+        <description>Creates standard ColdFusion ORM files based on selected tables.</description>
+      </template>
+    </subcategory>
+  </category>
+  
+  <category name="JavaScript" icon="file_type_js.svg">
+    <subcategory name="Model">
+      <template name="Model" filetype="js" style="module" language="javascript" template="js/js_model.xsl">
+        <description>Creates a JavaScript model class for the selected table.</description>
+      </template>
+    </subcategory>
+    <subcategory name="DAO">
+      <template name="DAO" filetype="js" style="module" language="javascript" template="js/js_dao.xsl">
+        <description>Creates a JavaScript data access object with CRUD functions for the selected table.</description>
+      </template>
+    </subcategory>
+    <subcategory name="API">
+      <template name="ExpressRoutes" filetype="js" style="module" language="javascript" template="js/js_express_routes.xsl">
+        <description>Creates Express.js routes for CRUD operations on the selected table.</description>
+      </template>
+    </subcategory>
+    <subcategory name="ORM">
+      <template name="SequelizeModel" filetype="js" style="module" language="javascript" template="js/js_sequelize_model.xsl">
+        <description>Creates a Sequelize ORM model for the selected table.</description>
+      </template>
+    </subcategory>
+  </category>
 
-	<node fileNameAppend="ORM-Script" fileType="cfc" style="script" language="cfml" template="orm_script.xsl">
-		<description>Creates standard ColdFusion ORM files based on selected tables.</description>
-	</node>
+  <category name="Laravel" icon="file_type_php.svg">
+    <subcategory name="Model">
+      <template fileNameAppend="Model" filetype="php" style="class" language="php" template="php/php_laravel_model.xsl">
+        <description>Creates a Laravel Eloquent model for the selected table.</description>
+      </template>
+    </subcategory>
+    <subcategory name="Controller">
+      <template fileNameAppend="Controller" filetype="php" style="class" language="php" template="php/php_laravel_api_controller.xsl">
+        <description>Creates a Laravel API controller with CRUD operations for the selected table.</description>
+      </template>
+    </subcategory>
+    <subcategory name="Routes">
+      <template fileNameAppend="ApiRoutes" filetype="php" style="script" language="php" template="php/php_laravel_api_routes.xsl">
+        <description>Creates Laravel API routes for the selected tables.</description>
+      </template>
+    </subcategory>
+  </category>
 </generator>

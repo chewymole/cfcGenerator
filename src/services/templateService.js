@@ -7,27 +7,58 @@ const parseXml = (xmlString) => {
 
 function extractTemplates(xmlDoc) {
   const templates = [];
-  const generatorElement = xmlDoc.getElementsByTagName("generator")[0];
+  const rootElement = xmlDoc.getElementsByTagName("generator")[0];
 
-  if (generatorElement) {
-    const componentNodes = generatorElement.children;
-    for (let i = 0; i < componentNodes.length; i++) {
-      const node = componentNodes[i];
-      const componentName = node.getAttribute("template");
-      if (componentName) {
-        templates.push({
-          name: componentName,
-          displayName: node.getAttribute("fileNameAppend") || componentName,
-          type: node.getAttribute("fileType") || "cfc",
-          language: node.getAttribute("language") || "cfml",
-          description:
-            node.getElementsByTagName("description")[0]?.textContent || "",
-          style: node.getAttribute("style") || "tag",
-          includes: Array.from(node.getElementsByTagName("include")).map(
-            (include) => include.getAttribute("file")
-          ),
-        });
+  if (rootElement) {
+    const categoryNodes = rootElement.children;
+    for (let i = 0; i < categoryNodes.length; i++) {
+      const categoryNode = categoryNodes[i];
+      const categoryName = categoryNode.getAttribute("name");
+      const categoryIcon = categoryNode.getAttribute("icon");
+      const subcategoryNodes = categoryNode.children;
+      for (let j = 0; j < subcategoryNodes.length; j++) {
+        const subcategoryNode = subcategoryNodes[j];
+        const subcategoryName = subcategoryNode.getAttribute("name");
+
+        const templateNodes = subcategoryNode.children;
+        for (let k = 0; k < templateNodes.length; k++) {
+          const templateNode = templateNodes[k];
+          const templateName = templateNode.getAttribute("template");
+          if (templateName) {
+            templates.push({
+              name: templateName,
+              displayName: templateNode.getAttribute("name") || templateName,
+              type: templateNode.getAttribute("filetype") || "txt",
+              language: templateNode.getAttribute("language") || "any",
+              category: categoryName || "Uncategorized",
+              categoryIcon: categoryIcon || "default",
+              subcategory: subcategoryName || "Uncategorized",
+              description:
+                templateNode.getElementsByTagName("description")[0]
+                  ?.textContent || "",
+              style: templateNode.getAttribute("style") || "tag",
+              includes: Array.from(
+                templateNode.getElementsByTagName("include")
+              ).map((include) => include.getAttribute("file")),
+            });
+          }
+        }
       }
+
+      // if (categoryName) {
+      //   templates.push({
+      //     name: componentName,
+      //     displayName: node.getAttribute("fileNameAppend") || componentName,
+      //     type: node.getAttribute("fileType") || "cfc",
+      //     language: node.getAttribute("language") || "cfml",
+      //     description:
+      //       node.getElementsByTagName("description")[0]?.textContent || "",
+      //     style: node.getAttribute("style") || "tag",
+      //     includes: Array.from(node.getElementsByTagName("include")).map(
+      //       (include) => include.getAttribute("file")
+      //     ),
+      //   });
+      // }
 
       /*
         const templates = result.generator.map((node) => ({

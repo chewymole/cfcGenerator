@@ -4,10 +4,13 @@
 	<xsl:output method="text" indent="no"  />
 		<xsl:template match="/">
 component persistent="true" table="<xsl:value-of select="//bean/@name"/>" output="false"{
-	<xsl:for-each select="root/bean/dbtable/column[@primaryKey='Yes']">property name="<xsl:value-of select="@name"/>" fieldtype="id" generator="identity" generated="always";
+	<xsl:for-each select="root/bean/dbtable/column[@primaryKey='Yes']">property name="<xsl:value-of select="@name"/>" fieldtype="id" generator="identity";
 	</xsl:for-each>	
 	<xsl:for-each select="root/bean/dbtable/column[@primaryKey!='Yes']">property name="<xsl:value-of select="@name" />" type="<xsl:value-of select="@type" />";
 	</xsl:for-each>
+	/*
+		Add releationships here
+	*/
 	function init() {		
 		return this;
     }

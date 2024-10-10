@@ -4,10 +4,13 @@
 	<xsl:output method="text" indent="no"  />
 		<xsl:template match="/">
 &lt;cfcomponent persistent="true" table="<xsl:value-of select="//bean/@name"/>" output="false"&gt;
-	<xsl:for-each select="root/bean/dbtable/column[@primaryKey='Yes']">&lt;cfproperty name="<xsl:value-of select="@name"/>" fieldtype="id" generator="identity" generated="always"/&gt;
+	<xsl:for-each select="root/bean/dbtable/column[@primaryKey='Yes']">&lt;cfproperty name="<xsl:value-of select="@name"/>" fieldtype="id" generator="identity"/&gt;
 	</xsl:for-each>	
 	<xsl:for-each select="root/bean/dbtable/column[@primaryKey!='Yes']">&lt;cfproperty name="<xsl:value-of select="@name" />" type="<xsl:value-of select="@type" />" /&gt;
 	</xsl:for-each>
+	&lt;!---
+		Add releationships here
+	---&gt;
 	&lt;cffunction name="init" access="public" output="false"&gt;		
 		&lt;cfreturn this /&gt;
  	&lt;/cffunction&gt;

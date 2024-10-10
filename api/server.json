@@ -11,5 +11,7 @@
             "enable":true
         }
     },
-    "openBrowser":false
+    "allowedExt": ["xsl"]
+  },
+  "openBrowser": false
 }

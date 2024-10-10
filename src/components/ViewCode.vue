@@ -36,14 +36,14 @@
     </div>
 
     <div class="flex">
-      <div class="w-1/4 pr-4 border-r">
+      <div class="w-1/4 pr-4 border-r h-[calc(100vh-200px)] overflow-y-auto">
         <h3 class="text-md font-semibold mb-2">Tables</h3>
         <ul class="space-y-2">
           <li
             v-for="file in generatedFiles"
             :key="file.tableName"
             @click="selectTable(file.tableName)"
-            class="cursor-pointer p-2 rounded"
+            class="cursor-pointer p-2 rounded hover:bg-gray-100"
             :class="{ 'bg-blue-100': selectedTable === file.tableName }"
           >
             {{ file.tableName }}
@@ -137,7 +137,22 @@ function saveAll() {
 </script>
 
 <style scoped>
-.view-code {
-  /* Add any additional styling here */
+.overflow-y-auto {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e0 #edf2f7;
+}
+
+.overflow-y-auto::-webkit-scrollbar {
+  width: 8px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track {
+  background: #edf2f7;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background-color: #cbd5e0;
+  border-radius: 4px;
+  border: 2px solid #edf2f7;
 }
 </style>
