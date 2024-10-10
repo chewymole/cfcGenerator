@@ -1,7 +1,7 @@
 # Code Generator
 
 ```
-  _____________________
+_____________________
  |  _________________  |
  | | Code Generator  | |
  | |_________________| |
@@ -121,11 +121,21 @@ Will return true if the given datasource name is valid and exists.
   - Simple to add new templates
   - Supports almost any programming language
 - Included Templates:
-  - Taffy API (DAO and Service)
-  - ORM CFC's (Tag and Script)
-  - CF DAO's
-  - CF Service's
-  - CF Bean's
+  - CFML
+    - Taffy API (DAO and Service)
+    - ORM CFC's (Tag and Script)
+    - CF DAO's
+    - CF Service's
+    - CF Bean's
+  - JS
+    - Express Routes
+    - Sequelize Model
+    - DAO
+    - Model
+  - PHP Laravel
+    - API Controller
+    - API Routes
+    - Model
 
 ### Other features:
 
@@ -197,10 +207,7 @@ These templates are easy to modify to your liking, and you are not limited to us
 
    1. If you plan to deploy the /api to a subfolder on your server, review the config.js files. These are needed to point to the correct folder that contains the XML/XSL files. If you get a blank screen, check this first.
    2. If you deploy to the root folder, just make sure to verify the config.js files are using the correct paths and API url's
-   3. If you plan to deploy the /api to a subfolder on your server, review the config.js files. These are needed to point to the correct folder that contains the XML/XSL files. If you get a blank screen, check this first.
-   4. If you deploy to the root folder, just make sure to verify the config.js files are using the correct paths and API url's
-   5. If you plan to deploy the /api to a subfolder on your server, review the config.js files. These are needed to point to the correct folder that contains the XML/XSL files. If you get a blank screen, check this first.
-   6. If you deploy to the root folder, just make sure to verify the config.js files are using the correct paths and API url's
+   3. If you are using the included API, and you are not able to browse to the API dashboard, make sure your CF server is running and the ports are correct. Also if you have this deployed to a subfolder, you may need to Login to the admin server and create a mapping to taffy. should be something like /taffy = {your installed folder for taffy}
 
 ## Usage
 
