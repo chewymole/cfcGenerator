@@ -19,13 +19,16 @@
 
 ## Table of Contents
 
-- [CFC Generator / API Generator](#cfc-generator--api-generator)
+- [Code Generator](#code-generator)
   - [Table of Contents](#table-of-contents)
   - [Ported from: CFC Generator](#ported-from-cfc-generator)
   - [About:](#about)
     - [Improvements:](#improvements)
-    - [API:](#api)
   - [Features](#features)
+    - [Language Support:](#language-support)
+    - [Improvments over the original project:](#improvments-over-the-original-project)
+    - [API:](#api)
+  - [Features](#features-1)
     - [Other features:](#other-features)
   - [Languages](#languages)
   - [Prerequisites](#prerequisites)
@@ -51,11 +54,84 @@ One of the awesome parts from Dean's original project is that he used XSL style-
 
 ### Improvements:
 
-I improved the XML index file (yac.XML) that describes the templates. I added Category, Subcategory, and Template elements. I also added a Name, Description, and syntax style attributes as well as the language icon. These are displayed in the UI to help the user identify what the template will be building.
+Enhanced type system with comprehensive language-to-SQL mappings
+Support for multiple programming languages including:
 
-I updated the structure of the xml, I included a few icons from [vscode-icons](https://github.com/vscode-icons/vscode-icons/tree/master/icons), feel free to add more as you need other file types.
+- CFML
+- JavaScript/TypeScript
+- Python
+- .NET (C#)
+- PHP/Laravel
+  Improved XML generation and validation
+  Better error handling and debugging capabilities
 
-I removed some of the older template types on the backend, I added a few extra CFML templates as well as some example JS and PHP templates. I added server side caching to the table list per datasource name to cache the database schema after the first run. So you may need to run it a few times, before your first attempt to generate the code.
+## Features
+
+- Generate Code based on a database table XML or your own adhoc abstract model. Models are now available, export or import JSON based schemas.
+- Import SQL CREATE TABLE sql files as a model.
+- Comprehensive type mapping system for multiple languages
+  config.js to control paths, urls, debug, max tables
+- New Adhoc Model creator for creating new models in the selected language without the need to connect to a database. Lots of new features to come here, but this is a great start.
+- New XML index file to manage the templates and make it easier to add new ones.
+- New icons for the different file types.
+- Templates now support child templates, so you can create more complex templates if needed.
+- Supported Database Types:
+  - MySQL (v4 & v5+)
+  - PostgreSQL (coming soon)
+  - Microsoft SQL Server
+  - Oracle (incomplete)
+  - Informix (incomplete)
+- XSLT Templates for Code Generation
+  - Easy to modify
+  - Simple to add new templates
+  - Supports multiple programming languages
+- Included Templates:
+- CFML
+  - Taffy API (DAO and Service)
+  - ORM CFC's (Tag and Script)
+  - CF DAO's
+  - CF Service's
+  - CF Bean's
+- JavaScript/TypeScript:
+  - Model Classes
+  - TypeScript Interfaces
+  - API Services
+  - Data Transfer Objects (DTOs)
+- Laravel/PHP:
+  - Eloquent Models
+  - Database Migrations
+  - API Controllers
+  - Resource Classes
+  - Form Requests
+  - API Routes
+- more to come...
+
+### Language Support:
+
+The generator now supports type mapping for:
+
+- CFML
+  - Native CFML types with SQL mappings
+  - ORM-specific type handling
+- JavaScript/TypeScript
+  - JavaScript primitive types
+  - TypeScript specific types (any, unknown, etc.)
+- Python
+  - Native Python types (str, int, float, etc.)
+- .NET (C#)
+  - Specific numeric types (Int32, Int16, etc.)
+  - Complex types (DateTime, Guid, etc.)
+- PHP/Laravel
+  - PHP native types
+  - Laravel framework types
+
+### Improvments over the original project:
+
+I improved the XML index file (yac.XML) that describes the templates. I added a Name, Description, and syntax style attributes. These are displayed in the UI to help the user identify what the template will be building.
+
+I updated the structure of the xml, now every main element is named node, then you can specify the template as an attribute. On the front end, i included a few icons from [vscode-icons](https://github.com/vscode-icons/vscode-icons/tree/master/icons), feel free to add more as you need other file types.
+
+I removed some of the older template types, and added an CF ORM template to generate code in both Tag and Script syntax and two Taffy API templates. On the backend, I added server side caching to the table list per datasource name to cache the database schema after the first run.
 
 I set a limit on the total tables returned, since this could lead to time-out requests. I may add table filtering in a feature release. But for now, its limited, feel free to remove this if you need more than 200 tables returned.
 
@@ -121,21 +197,11 @@ Will return true if the given datasource name is valid and exists.
   - Simple to add new templates
   - Supports almost any programming language
 - Included Templates:
-  - CFML
-    - Taffy API (DAO and Service)
-    - ORM CFC's (Tag and Script)
-    - CF DAO's
-    - CF Service's
-    - CF Bean's
-  - JS
-    - Express Routes
-    - Sequelize Model
-    - DAO
-    - Model
-  - PHP Laravel
-    - API Controller
-    - API Routes
-    - Model
+  - Taffy API (DAO and Service)
+  - ORM CFC's (Tag and Script)
+  - CF DAO's
+  - CF Service's
+  - CF Bean's
 
 ### Other features:
 
@@ -207,7 +273,10 @@ These templates are easy to modify to your liking, and you are not limited to us
 
    1. If you plan to deploy the /api to a subfolder on your server, review the config.js files. These are needed to point to the correct folder that contains the XML/XSL files. If you get a blank screen, check this first.
    2. If you deploy to the root folder, just make sure to verify the config.js files are using the correct paths and API url's
-   3. If you are using the included API, and you are not able to browse to the API dashboard, make sure your CF server is running and the ports are correct. Also if you have this deployed to a subfolder, you may need to Login to the admin server and create a mapping to taffy. should be something like /taffy = {your installed folder for taffy}
+   3. If you plan to deploy the /api to a subfolder on your server, review the config.js files. These are needed to point to the correct folder that contains the XML/XSL files. If you get a blank screen, check this first.
+   4. If you deploy to the root folder, just make sure to verify the config.js files are using the correct paths and API url's
+   5. If you plan to deploy the /api to a subfolder on your server, review the config.js files. These are needed to point to the correct folder that contains the XML/XSL files. If you get a blank screen, check this first.
+   6. If you deploy to the root folder, just make sure to verify the config.js files are using the correct paths and API url's
 
 ## Usage
 

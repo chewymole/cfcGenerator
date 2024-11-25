@@ -1,7 +1,7 @@
 {
   "name": "cfcgenerator",
   "private": true,
-  "version": "1.0.3",
+  "version": "1.0.2",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -19,12 +19,16 @@
     "autoprefixer": "^10.4.20",
     "axios": "^1.7.7",
     "cfcgenerator": "file:",
+    "node-sql-parser": "^5.3.4",
     "pinia": "^2.2.2",
     "postcss": "^8.4.45",
+    "prettier": "^3.3.3",
     "tailwindcss": "^3.4.10",
     "vue": "^3.4.37",
     "vue-codemirror": "^6.1.1",
     "vue-router": "^4.4.3",
+    "vue-toastification": "^2.0.0-rc.5",
+    "xml-formatter": "^3.6.3",
     "xml2js": "^0.6.2"
   },
   "devDependencies": {

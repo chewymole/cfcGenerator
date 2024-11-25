@@ -34,6 +34,9 @@ export const fetchTables = async (datasourceName) => {
       store.setSelectedTables(result.tables);
       store.setTablesXML(response.data.tableXML);
 
+      // Cache the tableXML after successful fetch
+      store.cacheDatasourceTables(datasourceName, response.data.tableXML);
+
       return result;
     } else {
       throw new Error("Unexpected response format");

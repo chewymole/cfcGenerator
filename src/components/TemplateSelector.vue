@@ -94,10 +94,10 @@
           :class="{ 'bg-blue-100': selectedTemplate === template }"
           @click="selectTemplate(template)"
         >
-          <h3 class="font-bold">{{ template.displayName }}</h3>
+          <h3 class="font-bold">{{ template.name }}</h3>
           <p>
             {{ template.style }} based {{ template.language }} ({{
-              template.type
+              template.filetype
             }})
           </p>
           <p class="text-sm text-gray-600">{{ template.description }}</p>
@@ -105,12 +105,68 @@
             Category: {{ template.category }} | Subcategory:
             {{ template.subcategory }}
           </p>
+          <div v-if="validationStatus.errors.length > 0" class="text-red-600">
+            <h4>Errors</h4>
+            <ul>
+              <li v-for="error in validationStatus.errors" :key="error">
+                {{ error }}
+              </li>
+            </ul>
+          </div>
+          <div
+            v-if="validationStatus.warnings.length > 0"
+            class="text-yellow-600"
+          >
+            <h4>Warnings</h4>
+            <ul>
+              <li v-for="warning in validationStatus.warnings" :key="warning">
+                {{ warning }}
+              </li>
+            </ul>
+          </div>
         </div>
+      </div>
+      <div
+        v-if="
+          validationStatus.errors.length > 0 ||
+          validationStatus.warnings.length > 0
+        "
+        class="mt-4 p-4 border rounded"
+      >
+        <div v-if="validationStatus.errors.length > 0" class="mb-4">
+          <h4 class="text-red-600 font-semibold mb-2">Errors:</h4>
+          <ul class="list-disc list-inside">
+            <li
+              v-for="(error, index) in validationStatus.errors"
+              :key="index"
+              class="text-red-600"
+            >
+              {{ error }}
+            </li>
+          </ul>
+        </div>
+
+        <div v-if="validationStatus.warnings.length > 0">
+          <h4 class="text-yellow-600 font-semibold mb-2">Warnings:</h4>
+          <ul class="list-disc list-inside">
+            <li
+              v-for="(warning, index) in validationStatus.warnings"
+              :key="index"
+              class="text-yellow-600"
+            >
+              {{ warning }}
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div v-if="validating" class="mt-4 text-gray-600">
+        Validating template...
       </div>
       <button
         @click="submitSelection"
         class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-        :disabled="!selectedTemplate"
+        :disabled="!selectedTemplate || !validationStatus.isValid"
+        :class="{ 'opacity-50 cursor-not-allowed': !validationStatus.isValid }"
       >
         Continue
       </button>
@@ -119,11 +175,12 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useGeneratorStore } from "../stores/generatorStore";
-import { getAvailableTemplates } from "../services/templateService";
+import { loadTemplates } from "../services/templateService";
 import { log, error as logError } from "../utils/logger";
+import { TemplateValidator } from "../services/templateValidator";
 
 const router = useRouter();
 const store = useGeneratorStore();
@@ -170,13 +227,23 @@ function getCategoryIcon(iconName) {
   return `/icons/${iconName}`;
 }
 
+const validationStatus = ref({
+  errors: [],
+  warnings: [],
+  isValid: true,
+});
+
+const validator = ref(null);
+
 onMounted(async () => {
   try {
-    templates.value = await getAvailableTemplates();
-    log("Templates loaded:", templates.value);
+    const result = await loadTemplates();
+    if (!result.success) {
+      error.value = result.message;
+    }
+    templates.value = result.templates;
   } catch (err) {
-    logError("Error fetching templates:", err);
-    error.value = "Failed to fetch templates. Please try again.";
+    error.value = "Failed to load templates";
   } finally {
     loading.value = false;
   }
@@ -191,24 +258,57 @@ function toggleFilter(filterType, value) {
   }
 }
 
-function selectTemplate(template) {
-  selectedTemplate.value = template;
-  store.setSelectedTemplate(template);
+function validateTemplate(template) {
+  if (!validator.value) {
+    logError("Validator not initialized");
+    return false;
+  }
 
-  log("Selected template:", template);
+  const validation = validator.value.validateTemplate(template.id);
+  validationStatus.value = {
+    errors: validation.errors,
+    warnings: validation.warnings,
+    isValid: validation.errors.length === 0,
+  };
+
+  return validationStatus.value.isValid;
+}
+
+const validating = ref(false);
+
+async function selectTemplate(template) {
+  if (!template || !template.id) {
+    console.error("Invalid template selected:", template);
+    return;
+  }
 
   try {
-    store.setWrapperFile(template.name);
-    store.setIncludes(template.includes);
-    log(
-      `Template ${template.displayName} selected with wrapper:`,
-      template.name,
-      "and includes:",
-      template.includes
-    );
-  } catch (err) {
-    logError("Error processing template selection:", err);
-    error.value = `Failed to process template selection for ${template.displayName}. Please try again.`;
+    // Store the full template object
+    store.setSelectedTemplate(template);
+
+    // Validate that we have all necessary data before proceeding
+    if (!store.selectedTemplate) {
+      throw new Error("Failed to set selected template");
+    }
+    try {
+      store.setWrapperFile(template.name);
+      store.setIncludes(template.includes);
+      log(
+        `Template ${template.displayName} selected with wrapper:`,
+        template.name,
+        "and includes:",
+        template.includes
+      );
+    } catch (err) {
+      logError("Error processing template selection:", err);
+      error.value = `Failed to process template selection for ${template.displayName}. Please try again.`;
+    }
+
+    // Navigate to generator view
+    router.push({ name: "Generate" });
+  } catch (error) {
+    console.error("Error selecting template:", error);
+    // Optionally show error to user
   }
 }
 
@@ -220,4 +320,21 @@ function submitSelection() {
     error.value = "Please select a template.";
   }
 }
+
+// Add this after your existing refs and computed properties
+watch(
+  () => store.availableTemplates,
+  (newTemplates) => {
+    console.log("Available templates changed:", newTemplates);
+  },
+  { immediate: true }
+);
+
+watch(
+  () => store.templates,
+  (newTemplates) => {
+    console.log("All templates changed:", newTemplates);
+  },
+  { immediate: true }
+);
 </script>

@@ -4,17 +4,21 @@ import App from "./App.vue";
 import router from "./router";
 import "./index.css";
 import { loadTemplates } from "./services/templateService";
+import Toast from "vue-toastification";
+import "vue-toastification/dist/index.css";
+import { useModelStore } from "./stores/modelStore";
+import { useGeneratorStore } from "./stores/generatorStore";
 const app = createApp(App);
-app.use(createPinia());
-app.use(router);
-//app.mount("#app");
+const pinia = createPinia();
 
-// Load templates before mounting the app
-Promise.all([loadTemplates()])
-  .then(() => {
-    app.mount("#app");
-  })
-  .catch((error) => {
-    console.error("Failed to load templates:", error);
-    // You might want to show an error message to the user here
-  });
+app.use(pinia);
+app.use(router);
+app.use(Toast);
+
+// Initialize the model store
+const modelStore = useModelStore();
+await modelStore.loadModels();
+
+await loadTemplates();
+
+app.mount("#app");
