@@ -10,7 +10,7 @@
     <codemirror
       :modelValue="content"
       placeholder="code goes here..."
-      :style="{ maxHeight: '400px', width: '80%' }"
+      :style="{ maxHeight: '600px', width: '90%' }"
       :autofocus="true"
       :indent-with-tab="true"
       :tab-size="4"

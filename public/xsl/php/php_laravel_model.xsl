@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+  <xsl:include href="../shared/dataTypeMapping.xsl"/>  
   <xsl:output method="text" indent="no"/>  
   <xsl:template match="/">
 &lt;?php
@@ -27,11 +28,8 @@ class <xsl:value-of select="//bean/@name"/> extends Model
 
   <xsl:template name="mapDataType">
     <xsl:param name="dataType"/>
-    <xsl:choose>
-      <xsl:when test="$dataType = 'numeric'">integer</xsl:when>
-      <xsl:when test="$dataType = 'date'">datetime</xsl:when>
-      <xsl:when test="$dataType = 'string'">string</xsl:when>
-      <xsl:otherwise>string</xsl:otherwise>
-    </xsl:choose>
+    <xsl:call-template name="mapLaravelType">
+      <xsl:with-param name="dataType" select="$dataType"/>
+    </xsl:call-template>
   </xsl:template>
 </xsl:stylesheet>

@@ -74,7 +74,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["update:selectedTables"]);
+const emit = defineEmits(["selected-tables"]);
 
 const selectedTables = ref([]);
 const searchQuery = ref("");
@@ -133,7 +133,7 @@ watch(selectedTables, (newValue) => {
   if (newValue.length > MAX_SELECTED) {
     selectedTables.value = newValue.slice(0, MAX_SELECTED);
   }
-  emit("update:selectedTables", selectedTables.value);
+  emit("selected-tables", selectedTables.value);
   selectAll.value = filteredTables.value.every((table) =>
     selectedTables.value.includes(table)
   );

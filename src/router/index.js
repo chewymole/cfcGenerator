@@ -1,17 +1,19 @@
-import { createRouter, createWebHashHistory } from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
 import { useGeneratorStore } from "../stores/generatorStore";
 
 import DataSourceInput from "../components/DataSourceInput.vue";
 import TableSelector from "../components/TableSelector.vue";
 import TemplateSelector from "../components/TemplateSelector.vue";
 import Generate from "../components/Generate.vue";
-import ViewCode from "../components/ViewCode.vue"; // Add this import
+import ViewCode from "../components/ViewCodeNew.vue"; // Add this import
+import ModelDesigner from "../views/ModelDesigner.vue";
+import StartOptions from "../components/StartOptions.vue";
 
 const routes = [
   {
     path: "/",
     name: "DataSource",
-    component: DataSourceInput,
+    component: StartOptions,
   },
   {
     path: "/tables",
@@ -33,10 +35,33 @@ const routes = [
     name: "ViewCode",
     component: ViewCode,
   },
+  {
+    path: "/model-designer",
+    name: "ModelDesigner",
+    component: ModelDesigner,
+    children: [
+      {
+        path: "new",
+        name: "NewModel",
+        component: () => import("../components/designer/NewModelForm.vue"),
+      },
+      {
+        path: "import",
+        name: "ImportModel",
+        component: () => import("../components/designer/ImportModel.vue"),
+      },
+      {
+        path: "edit/:id",
+        name: "EditModel",
+        component: () => import("../components/designer/EditModel.vue"),
+        props: true,
+      },
+    ],
+  },
 ];
 
 const router = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes,
 });
 

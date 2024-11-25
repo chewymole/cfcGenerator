@@ -9,7 +9,7 @@
     <div v-else>
       <EnhancedTableSelector
         :tables="tables"
-        @update:selectedTables="handleSelectedTables"
+        @selected-tables="handleSelectedTables"
       />
       <!-- <div v-for="table in tables" :key="table" class="mb-2">
         <label class="flex items-center">
@@ -35,7 +35,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import { useRouter } from "vue-router";
 import EnhancedTableSelector from "./EnhancedTableSelector.vue";
 import { useGeneratorStore } from "../stores/generatorStore";
@@ -81,7 +81,9 @@ onMounted(async () => {
 
 function handleSelectedTables(selected) {
   selectedTables.value = selected;
+  log("Selected tables:", selectedTables.value);
   store.setSelectedTables(selectedTables.value);
+  log("Selected tables:", store.getSelectedTables());
 }
 
 function submitSelection() {
@@ -90,4 +92,10 @@ function submitSelection() {
     router.push({ name: "Templates" });
   }
 }
+
+watch(selectedTables, (newValue) => {
+  log("Selected tables:", newValue);
+  store.setSelectedTables(newValue);
+  log("Selected tables:", store.getSelectedTables());
+});
 </script>

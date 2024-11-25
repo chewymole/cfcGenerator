@@ -1,147 +1,298 @@
-import { useGeneratorStore } from "../stores/generatorStore";
+import { TemplateProcessor, TemplateResult } from "./templateProcessor";
+import { XMLHandler, XMLResult } from "./xmlHandler";
+import { fileManager, FileResult } from "./fileManager";
 import { log, error } from "../utils/logger";
+import { useGeneratorStore } from "../stores/generatorStore";
 
-async function fetchXSLContent(filename) {
-  log(`Fetching XSL content for: ${filename}`);
-  const baseUrl = window.APP_CONFIG?.BASE_URL || "/";
-  try {
-    // Use a relative path from the root of the public directory
-    const response = await fetch(`${baseUrl}xsl/${filename}`);
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
+export class GenerationResult {
+  constructor(success, data = null, error = null) {
+    this.success = success;
+    this.data = data;
+    this.error = error;
+  }
 
-    const content = await response.text();
-    log("XSL Content", content);
-    // Check if the content looks like XSL
-    if (content.includes("<!DOCTYPE html>")) {
-      throw new Error("Content does not appear to be a valid XSL file");
-    }
+  static success(data) {
+    return new GenerationResult(true, data);
+  }
 
-    log(`Successfully fetched XSL content for ${filename}`);
-    return content;
-  } catch (err) {
-    error(`Error fetching XSL file ${filename}:`, err);
-    throw new Error(`Failed to fetch XSL file ${filename}: ${err.message}`);
+  static failure(error) {
+    return new GenerationResult(false, null, error);
   }
 }
 
-function decodeXSLContent(content) {
-  return content
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&amp;/g, "&");
-}
+class CodeGenerator {
+  constructor() {
+    this.store = useGeneratorStore();
+    this.templateProcessor = new TemplateProcessor();
+    this.xmlHandler = new XMLHandler();
+    // Validate store initialization
+    if (!this.store) {
+      error("Store not properly initialized");
+      throw new Error("Store not properly initialized");
+    }
+  }
 
-async function processXSL(template, includes, templatePath) {
-  try {
-    const wrapperXSL = await fetchXSLContent(`${template}`, templatePath);
-    const decodedWrapperXSL = wrapperXSL;
+  async generateCode(template, tableNames) {
+    try {
+      log("Starting code generation:", { template, tableNames });
 
-    let innerFunctions = "";
-    for (const include of includes) {
-      try {
-        const innerXSL = await fetchXSLContent(include, templatePath);
-        innerFunctions += innerXSL;
-      } catch (err) {
-        error(`Error processing include ${include}:`, err);
-        // You might want to throw this error or handle it differently
+      if (!template || !tableNames?.length) {
+        throw new Error("Missing template or tables");
       }
-    }
 
-    const processedXSL = decodedWrapperXSL.replace(
-      "<!-- custom code -->",
-      innerFunctions
-    );
-    log("Processed XSL:", processedXSL);
-    return processedXSL;
-  } catch (err) {
-    error("Error processing XSL:", err);
-    throw err;
-  }
-}
+      const results = [];
 
-export async function generateCode(template, tables, tablesXML) {
-  log("Generating code for template:", template, "and tables:", tables);
-  log("Tables XML:", tablesXML);
+      // Process each table
+      for (const table of tableNames) {
+        try {
+          // Extract table name
+          const tableName = typeof table === "object" ? table.name : table;
 
-  const store = useGeneratorStore();
+          // Generate main template
+          const mainResult = await this.generateTemplateCode(
+            template,
+            tableName
+          );
 
-  try {
-    const baseUrl = window.APP_CONFIG?.BASE_URL || "/";
-    const templatePath = `${baseUrl}xsl/`; //store.getTemplatePath();
-    const includes = store.getIncludes();
-
-    const xslContentRaw = await processXSL(
-      template.name,
-      includes,
-      templatePath
-    );
-
-    const parser = new DOMParser();
-    const xslDoc = parser.parseFromString(xslContentRaw, "text/xml");
-    log("xslDoc parsed:", xslDoc);
-
-    const xsltProcessor = new XSLTProcessor();
-    xsltProcessor.importStylesheet(xslDoc);
-
-    const generatedCodeFiles = [];
-    for (const table of tables) {
-      const tableXML = findTableInXML(tablesXML, table);
-      if (tableXML) {
-        log("tableXML before:", tableXML);
-        const cleanedXmlString = tableXML.replace(/[\r\n\t]/g, "");
-
-        const tableDoc = parser.parseFromString(cleanedXmlString, "text/xml");
-        log("tableDoc parsed:", tableDoc);
-
-        const resultFragment = xsltProcessor.transformToFragment(
-          tableDoc,
-          document
-        );
-        if (resultFragment) {
-          const generatedCode = resultFragment.textContent.trim();
-          if (generatedCode) {
-            generatedCodeFiles.push({
-              tableName: table,
-              code: generatedCode,
-            });
+          if (!mainResult.success) {
+            throw new Error(mainResult.error);
           }
+
+          const result = {
+            tableName, // Use the extracted name
+            mainFile: {
+              code: mainResult.data,
+              filename: fileManager.generateFilename({
+                tableName,
+                template,
+                isChild: false,
+              }).data.filename,
+              type: "main",
+            },
+            childFiles: [],
+            success: true,
+          };
+
+          // Process child templates if they exist
+          if (template.children?.length) {
+            const childResults = await this.processChildTemplates(
+              tableName,
+              template.children
+            );
+            result.childFiles = childResults;
+          }
+
+          results.push(result);
+          log(`Generated code for table: ${tableName}`); // Use the extracted name
+        } catch (err) {
+          error(
+            `Failed to process table ${typeof table === "object" ? table.name : table}:`,
+            err
+          );
+          results.push({
+            tableName: typeof table === "object" ? table.name : table,
+            success: false,
+            error: err.message,
+          });
         }
       }
+
+      // Store all results
+      this.storeResults(results);
+
+      return GenerationResult.success({
+        results,
+        successCount: results.filter((r) => r.success).length,
+        totalCount: results.length,
+      });
+    } catch (err) {
+      error("Code generation failed:", err);
+      return GenerationResult.failure(err.message);
     }
-    store.setGeneratedCodeFiles(generatedCodeFiles);
-    return generatedCodeFiles;
-  } catch (err) {
-    error("Error during code generation:", err);
-    throw err;
   }
-}
 
-function capitalize(string) {
-  return string.charAt(0).toUpperCase() + string.slice(1);
-}
+  async generateTemplateCode(template, tableName) {
+    try {
+      // Get includes
+      const includes = this.store.getIncludes();
 
-function findTableInXML(tablesXML, table) {
-  // Iterate through the array of XML strings to find the matching table
-  for (const xmlString of tablesXML) {
-    // Parse the current XML string into a DOM object
-    const parser = new DOMParser();
-    const xmlDoc = parser.parseFromString(xmlString, "text/xml");
+      // Process template and includes
+      const processedTemplate = await this.templateProcessor.processTemplate(
+        template.template,
+        includes
+      );
 
-    // Get the first <bean> element
-    const beanElement = xmlDoc.getElementsByTagName("bean")[0];
+      if (!processedTemplate.success) {
+        return GenerationResult.failure(processedTemplate.error);
+      }
 
-    // Ensure the bean element exists and get the 'name' attribute
-    if (beanElement) {
-      const currentTableName = beanElement.getAttribute("name"); // Get the 'name' attribute
+      // Create XSL processor
+      const processor = this.templateProcessor.createProcessor(
+        processedTemplate.content
+      );
+      if (!processor.success) {
+        return GenerationResult.failure(processor.error);
+      }
 
-      // Check if the current table name matches the input table name
-      if (currentTableName === table) {
-        return xmlString; // Return the matching XML string
+      // Extract table name if it's an object
+      const tableNameStr =
+        typeof tableName === "object" ? tableName.name : tableName;
+
+      // Handle both datasource and model cases
+      let tableXML;
+      const model = this.store.selectedModel;
+      const tablesXML = this.store.tablesXML;
+      const isUsingModel = model && model.tables && model.tables.length > 0;
+
+      if (isUsingModel) {
+        // Using model
+        log("Using model for table XML");
+        const table = model.tables.find((t) => t.name === tableNameStr);
+
+        if (!table) {
+          return GenerationResult.failure(
+            `Table ${tableNameStr} not found in model`
+          );
+        }
+
+        tableXML = this.xmlHandler.createTableXML(table, model);
+      } else if (tablesXML) {
+        // Using datasource
+        log("Using datasource for table XML");
+        tableXML = this.xmlHandler.findTableInXML(tablesXML, tableNameStr);
+      } else {
+        return GenerationResult.failure("No valid model or tables XML found");
+      }
+
+      if (!tableXML?.success) {
+        return GenerationResult.failure(
+          tableXML?.error || "Failed to get table XML"
+        );
+      }
+
+      // Transform XML
+      const transformResult = this.xmlHandler.transformXML(
+        tableXML.content,
+        processor.content
+      );
+
+      return transformResult.success
+        ? GenerationResult.success(transformResult.content)
+        : GenerationResult.failure(transformResult.error);
+    } catch (err) {
+      error("Template code generation failed:", err);
+      return GenerationResult.failure(err.message);
+    }
+  }
+
+  async processChildTemplates(tableName, childTemplates) {
+    const results = [];
+
+    log("Processing child templates for", tableName, childTemplates);
+
+    for (const child of childTemplates) {
+      try {
+        // Get child template definition
+        const childTemplate = this.store
+          .getTemplates()
+          .find((t) => t.id === child.ref);
+
+        log("Found child template:", childTemplate);
+
+        if (!childTemplate) {
+          throw new Error(`Child template ${child.ref} not found`);
+        }
+
+        // Generate child template code
+        const childResult = await this.generateTemplateCode(
+          childTemplate,
+          tableName
+        );
+
+        log("Child template generation result:", childResult);
+
+        if (childResult.success) {
+          const filename = fileManager.generateFilename({
+            tableName,
+            template: childTemplate,
+            isChild: true,
+            childType: childTemplate.name,
+          }).data.filename;
+
+          results.push({
+            code: childResult.data,
+            filename,
+            type: "child",
+            templateId: child.ref,
+          });
+
+          log("Added child result:", results[results.length - 1]);
+        } else {
+          error(
+            `Child template generation failed for ${tableName}:`,
+            childResult.error
+          );
+        }
+      } catch (err) {
+        error(`Failed to process child template for ${tableName}:`, err);
       }
     }
+
+    log("Final child template results:", results);
+    return results;
   }
 
-  return null; // Return null if no match is found
+  storeResults(results) {
+    // Store main files
+    const mainFiles = results
+      .filter((r) => r.success)
+      .map((r) => ({
+        tableName: r.tableName,
+        code: r.mainFile.code,
+        filename: r.mainFile.filename,
+        success: true,
+      }));
+
+    this.store.setGeneratedCodeFiles(mainFiles);
+
+    // Debug log before storing child files
+    log(
+      "Results with child files:",
+      results.filter((r) => r.success && r.childFiles?.length > 0)
+    );
+
+    // Store child files
+    results
+      .filter((r) => r.success && r.childFiles?.length > 0)
+      .forEach((r) => {
+        log(`Processing child files for table ${r.tableName}:`, r.childFiles);
+
+        r.childFiles.forEach((child) => {
+          log("Storing child file:", {
+            tableName: r.tableName,
+            templateId: child.templateId,
+            filename: child.filename,
+          });
+
+          this.store.setGeneratedChildFile(
+            r.tableName,
+            child.templateId,
+            child.code,
+            child.filename
+          );
+        });
+      });
+
+    // Debug log after storing
+    log("Store state after storing files:", {
+      mainFiles: this.store.generatedCodeFiles,
+      childFiles: this.store.generatedChildFiles,
+    });
+  }
+}
+
+// Export the main generation function
+export async function generateCode(template, tableNames) {
+  const generator = new CodeGenerator();
+  return generator.generateCode(template, tableNames);
 }
