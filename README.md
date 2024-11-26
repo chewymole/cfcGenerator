@@ -281,7 +281,7 @@ These templates are easy to modify to your liking, and you are not limited to us
 ## Usage
 
 1. Access the Vue 3 frontend at `http://localhost:3000` (or the port specified in your Vite config). Or run `npm build` and deploy the `dist` folder to your server.
-2. Use the interface to
+2. Use the interface to either
 
     1. Enter a Datasource Name
     2. Create a model

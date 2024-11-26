@@ -284,9 +284,9 @@ export const useModelStore = defineStore("model", () => {
   }
 
   // Get a specific model by ID
-  function getModelById(id) {
+  async function getModelById(id) {
     if (!initialized.value) {
-      loadModels();
+      await loadModels();
     }
 
     const model = models.value.find((m) => m.id === id);

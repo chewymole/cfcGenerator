@@ -108,16 +108,15 @@
     <!-- New Data Source Modal -->
     <Modal
       v-if="showNewDataSourceModal"
+      :show="showNewDataSourceModal"
+      title="New Data Source"
       @close="showNewDataSourceModal = false"
     >
-      <template #title>New Data Source</template>
-      <template #content>
-        <DataSourceInput
-          v-model="dataSource"
-          :error="error"
-          @validate="validateAndCloseModal"
-        />
-      </template>
+      <DataSourceInput
+        v-model="dataSource"
+        :error="error"
+        @validate="validateAndCloseModal"
+      />
     </Modal>
 
     <!-- Import Data Modal (commented out for now) -->

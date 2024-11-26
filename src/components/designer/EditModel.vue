@@ -475,6 +475,9 @@ async function loadModel() {
   error.value = null;
 
   try {
+    // First ensure models are loaded
+    await modelStore.loadModels();
+
     const loadedModel = await modelStore.getModelById(route.params.id);
     if (!loadedModel) {
       throw new Error("Model not found");
