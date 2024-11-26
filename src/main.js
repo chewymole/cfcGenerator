@@ -17,8 +17,10 @@ app.use(Toast);
 
 // Initialize the model store
 const modelStore = useModelStore();
-await modelStore.loadModels();
+async function initializeApp() {
+  await modelStore.loadModels();
+  await loadTemplates();
+  app.mount("#app");
+}
 
-await loadTemplates();
-
-app.mount("#app");
+initializeApp();
