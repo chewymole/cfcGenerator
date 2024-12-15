@@ -8,7 +8,7 @@
     </textarea> -->
 
     <codemirror
-      :modelValue="content"
+      :model-value="content"
       placeholder="code goes here..."
       :style="{ maxHeight: '600px', width: '90%' }"
       :autofocus="true"
@@ -43,7 +43,7 @@ const props = defineProps({
   additionalExtensions: {
     type: Array,
     required: false,
-    default: [],
+     default: () => []
   },
 });
 

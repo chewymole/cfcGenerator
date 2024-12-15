@@ -6,7 +6,7 @@ import TableSelector from "../components/TableSelector.vue";
 import TemplateSelector from "../components/TemplateSelector.vue";
 import Generate from "../components/Generate.vue";
 import ViewCode from "../components/ViewCodeNew.vue"; // Add this import
-import ModelDesigner from "../views/ModelDesigner.vue";
+import ModelDesigner from "../components/ModelDesigner.vue";
 import StartOptions from "../components/StartOptions.vue";
 
 const routes = [
@@ -44,6 +44,7 @@ const routes = [
         path: "new",
         name: "NewModel",
         component: () => import("../components/designer/NewModelForm.vue"),
+        props: true,
       },
       {
         path: "import",

@@ -12,15 +12,15 @@
           id="datasource"
           type="text"
           :value="modelValue"
-          @input="$emit('update:modelValue', $event.target.value)"
           class="flex-grow px-3 py-2 border rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
           placeholder="Enter your datasource name"
           :class="{ 'border-red-300': error }"
-        />
+          @input="$emit('update:modelValue', $event.target.value)"
+        >
         <button
-          @click="$emit('validate')"
           class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200"
           :disabled="!modelValue"
+          @click="$emit('validate')"
         >
           Continue
         </button>

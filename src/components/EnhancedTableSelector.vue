@@ -5,17 +5,17 @@
         v-model="searchQuery"
         placeholder="Search tables..."
         class="w-full p-2 border rounded"
-      />
+      >
     </div>
 
     <div class="mb-4">
       <label class="flex items-center">
         <input
-          type="checkbox"
           v-model="selectAll"
-          @change="toggleSelectAll"
+          type="checkbox"
           class="mr-2"
-        />
+          @change="toggleSelectAll"
+        >
         Select All
       </label>
     </div>
@@ -27,12 +27,12 @@
           :class="{ 'opacity-50': isDisabled(table) }"
         >
           <input
+            v-model="selectedTables"
             type="checkbox"
             :value="table"
-            v-model="selectedTables"
             :disabled="isDisabled(table)"
             class="mr-2"
-          />
+          >
           {{ table }}
         </label>
       </div>
@@ -40,19 +40,19 @@
 
     <div class="pagination flex justify-between items-center">
       <button
-        @click="prevPage"
         :disabled="currentPage === 1"
         class="px-2 py-1 border rounded"
         :class="{ 'opacity-50 cursor-not-allowed': currentPage === 1 }"
+        @click="prevPage"
       >
         Previous
       </button>
       <span>Page {{ currentPage }} of {{ totalPages }}</span>
       <button
-        @click="nextPage"
         :disabled="currentPage === totalPages"
         class="px-2 py-1 border rounded"
         :class="{ 'opacity-50 cursor-not-allowed': currentPage === totalPages }"
+        @click="nextPage"
       >
         Next
       </button>
@@ -66,6 +66,7 @@
 
 <script setup>
 import { ref, computed, watch } from "vue";
+import { APP_CONFIG } from "@config/appConfig";
 
 const props = defineProps({
   tables: {
@@ -81,8 +82,7 @@ const searchQuery = ref("");
 const currentPage = ref(1);
 const itemsPerPage = 10;
 const selectAll = ref(false);
-// Use the MAX_SELECTED value from config.js, with a fallback value of 10
-const MAX_SELECTED = window.APP_CONFIG?.MAX_SELECTED_TABLES || 10;
+const MAX_SELECTED = APP_CONFIG.MAX_SELECTED_TABLES || 10;
 
 const filteredTables = computed(() => {
   return props.tables.filter((table) =>

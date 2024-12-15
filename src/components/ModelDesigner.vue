@@ -3,10 +3,12 @@
     <!-- Sidebar Navigation -->
     <div class="w-64 border-r bg-gray-50">
       <div class="p-4">
-        <h2 class="text-lg font-semibold mb-4">Models</h2>
+        <h2 class="text-lg font-semibold mb-4">
+          Models
+        </h2>
         <button
-          @click="createNewModel"
           class="w-full mb-4 px-4 py-2 bg-blue-500 text-white rounded"
+          @click="createNewModel"
         >
           Create New Model
         </button>

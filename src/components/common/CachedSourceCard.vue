@@ -4,15 +4,17 @@
   >
     <div class="flex justify-between items-start">
       <div class="flex-grow">
-        <h4 class="font-medium text-gray-900">{{ name }}</h4>
+        <h4 class="font-medium text-gray-900">
+          {{ name }}
+        </h4>
         <p class="text-sm text-gray-500 mt-1">
           Last used: {{ formatDate(timestamp) }}
         </p>
       </div>
       <button
-        @click.stop="$emit('remove', name)"
         class="text-gray-400 hover:text-red-500 p-1"
         title="Remove from cache"
+        @click.stop="$emit('remove', name)"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -29,8 +31,8 @@
       </button>
     </div>
     <button
-      @click="$emit('use', name)"
       class="mt-3 w-full px-4 py-2 bg-blue-50 text-blue-600 rounded hover:bg-blue-100 transition-colors duration-200"
+      @click="$emit('use', name)"
     >
       Use This Source
     </button>
@@ -46,8 +48,9 @@ defineProps({
   timestamp: {
     type: String,
     required: true,
-  },
+  }  
 });
+defineEmits(["remove", "use"]);
 
 function formatDate(isoString) {
   return new Date(isoString).toLocaleString(undefined, {

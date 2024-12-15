@@ -7,7 +7,9 @@
     >
       <div class="flex justify-between items-start">
         <div>
-          <h3 class="font-medium text-gray-900">{{ model.name }}</h3>
+          <h3 class="font-medium text-gray-900">
+            {{ model.name }}
+          </h3>
           <p class="text-sm text-gray-500 mt-1">
             {{ model.tables?.length || 0 }} tables
           </p>
@@ -30,9 +32,9 @@
             </svg>
           </router-link>
           <button
-            @click="confirmDelete(model)"
             class="p-1 text-gray-400 hover:text-red-500"
             title="Delete Model"
+            @click="confirmDelete(model)"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -70,8 +72,8 @@
       <!-- Use Model Button -->
       <div class="mt-4 flex justify-end">
         <button
-          @click="useModel(model)"
           class="px-4 py-2 text-sm text-blue-600 hover:bg-blue-50 rounded-lg"
+          @click="useModel(model)"
         >
           Use This Model
         </button>

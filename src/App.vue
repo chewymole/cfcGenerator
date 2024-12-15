@@ -1,7 +1,9 @@
 <template>
   <div class="min-h-screen bg-gray-100">
     <header class="bg-blue-600 text-white p-4">
-      <h1 class="text-2xl font-bold">VU-3 Code Generator</h1>
+      <h1 class="text-2xl font-bold">
+        VU-3 Code Generator
+      </h1>
       <nav class="mt-4">
         <router-link
           v-for="(step, index) in steps"
@@ -20,12 +22,12 @@
 
         <div class="flex items-center float-right">
           <button
-            @click="showSettings = true"
             class="p-2 rounded-full hover:bg-gray-100 transition-colors"
             title="Settings"
+            @click="showSettings = true"
           >
             <svg
-              class="w-6 h-6 text-gray-600"
+              class="w-6 h-6 text-white-600 hover:text-gray-800"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -55,7 +57,7 @@
       </Modal>
     </header>
     <main class="p-4">
-      <router-view></router-view>
+      <router-view />
     </main>
   </div>
 </template>

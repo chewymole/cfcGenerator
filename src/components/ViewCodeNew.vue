@@ -5,9 +5,13 @@
       class="menu-bar flex justify-between items-center mb-4 bg-gray-100 p-4"
     >
       <div class="flex justify-between items-center mb-4" style="width: 80%;">
-        <h2 class="text-lg font-semibold">Code Editor</h2>
+        <h2 class="text-lg font-semibold">
+          Code Editor
+        </h2>
         <div v-if="selectedTemplate" class="text-center">
-          <h3 class="text-center">{{ selectedTemplate.name }}</h3>
+          <h3 class="text-center">
+            {{ selectedTemplate.name }}
+          </h3>
           <span class="text-sm text-gray-600 ml-2">
             ({{ selectedTemplate.style }} based)
           </span>
@@ -15,21 +19,21 @@
             {{ selectedTemplate.description }}
           </p>
         </div>
-        <div></div>
+        <div />
       </div>
       <div>
         <button
           class="bg-blue-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-600 transition duration-200 mr-2"
           @click="saveCurrentFile"
         >
-          <i class="fas fa-save mr-2"></i>
+          <i class="fas fa-save mr-2" />
           Save
         </button>
         <button
           class="bg-green-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-green-600 transition duration-200"
           @click="saveAll"
         >
-          <i class="fas fa-save mr-2"></i>
+          <i class="fas fa-save mr-2" />
           Save All
         </button>
       </div>
@@ -38,7 +42,9 @@
     <div class="flex">
       <!-- Left Sidebar - Tables and Files -->
       <div class="w-1/4 pr-4 border-r h-[calc(100vh-200px)] overflow-y-auto">
-        <h3 class="text-md font-semibold mb-2">Generated Files</h3>
+        <h3 class="text-md font-semibold mb-2">
+          Generated Files
+        </h3>
         <div class="space-y-4">
           <div v-for="table in tables" :key="table.name" class="space-y-2">
             <!-- Table Header -->
@@ -65,7 +71,6 @@
             <div v-if="expandedTables[table.name]" class="ml-4 space-y-1">
               <!-- Main template file -->
               <div
-                @click="selectFile(table.name, `${table.name}-main`)"
                 class="cursor-pointer p-2 rounded text-sm hover:bg-gray-100"
                 :class="{
                   'bg-blue-100': isSelectedFile(
@@ -73,6 +78,7 @@
                     `${table.name}-main`
                   ),
                 }"
+                @click="selectFile(table.name, `${table.name}-main`)"
               >
                 {{ getDisplayName(table.name, "main") }}
               </div>
@@ -80,11 +86,11 @@
               <div
                 v-for="childFile in getChildFiles(table.name)"
                 :key="childFile.id"
-                @click="selectFile(table.name, childFile.id)"
                 class="cursor-pointer p-2 rounded text-sm hover:bg-gray-100 ml-2"
                 :class="{
                   'bg-blue-100': isSelectedFile(table.name, childFile.id),
                 }"
+                @click="selectFile(table.name, childFile.id)"
               >
                 {{ childFile.name }}
               </div>
@@ -134,15 +140,15 @@
               type="text"
               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               placeholder="Enter filename"
-            />
+            >
           </div>
 
           <!-- Editor -->
           <Editor
             v-if="isValidContent"
             :key="`${selectedFile.tableName}-${selectedFile.id}`"
-            :fileContent="selectedFile.code"
-            :fileName="selectedFile.filename"
+            :file-content="selectedFile.code"
+            :file-name="selectedFile.filename"
             @update:file-content="storeChanges"
           />
         </div>

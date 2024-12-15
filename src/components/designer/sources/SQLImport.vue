@@ -11,13 +11,13 @@
       @drop.prevent="handleDrop"
     >
       <input
+        ref="fileInput"
         type="file"
         accept=".sql"
-        @change="handleFileUpload"
         class="hidden"
-        ref="fileInput"
-      />
-      <div @click="$refs.fileInput.click()" class="text-center cursor-pointer">
+        @change="handleFileUpload"
+      >
+      <div class="text-center cursor-pointer" @click="$refs.fileInput.click()">
         <p>Drop your SQL file here or click to browse</p>
         <p class="text-sm text-gray-500">
           Supports CREATE TABLE statements ONLY!
@@ -28,10 +28,12 @@
     <div v-if="sqlContent" class="space-y-4">
       <div class="bg-gray-50 p-4 rounded">
         <div class="flex justify-between items-center mb-2">
-          <h3 class="font-semibold">SQL Content:</h3>
+          <h3 class="font-semibold">
+            SQL Content:
+          </h3>
           <button
-            @click="showFullSQL = !showFullSQL"
             class="text-sm text-blue-600 hover:text-blue-800"
+            @click="showFullSQL = !showFullSQL"
           >
             {{ showFullSQL ? "Show Preview" : "Show Full SQL" }}
           </button>
@@ -39,8 +41,7 @@
         <pre
           class="text-sm overflow-auto"
           :class="{ 'max-h-60': !showFullSQL }"
-          >{{ showFullSQL ? sqlContent : sqlPreview }}</pre
-        >
+        >{{ showFullSQL ? sqlContent : sqlPreview }}</pre>
       </div>
 
       <div
@@ -63,13 +64,13 @@
       </div>
 
       <button
-        @click="parseSQL"
         class="px-4 py-2 rounded"
         :class="{
           'bg-blue-500 hover:bg-blue-600 text-white': !parsing,
           'bg-gray-400 cursor-not-allowed text-white': parsing,
         }"
         :disabled="parsing"
+        @click="parseSQL"
       >
         <span v-if="parsing" class="flex items-center">
           <svg
@@ -85,12 +86,12 @@
               r="10"
               stroke="currentColor"
               stroke-width="4"
-            ></circle>
+            />
             <path
               class="opacity-75"
               fill="currentColor"
               d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-            ></path>
+            />
           </svg>
           Parsing SQL...
         </span>
