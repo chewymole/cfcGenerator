@@ -7,7 +7,7 @@
     }"
     @click="$emit('click')"
   >
-    <slot></slot>
+    <slot />
   </button>
 </template>
 
@@ -18,4 +18,6 @@ defineProps({
     default: false,
   },
 });
+
+defineEmits(["click"]);
 </script>

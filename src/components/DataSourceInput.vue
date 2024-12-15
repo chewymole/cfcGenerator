@@ -1,19 +1,23 @@
 <template>
   <div>
-    <h2 class="text-xl font-semibold mb-4">Enter Data Source</h2>
+    <h2 class="text-xl font-semibold mb-4">
+      Enter Data Source
+    </h2>
     <input
       v-model="dataSource"
-      @keyup.enter="validateDataSource"
       class="w-full p-2 border rounded mb-4"
       placeholder="Enter data source name"
-    />
+      @keyup.enter="validateDataSource"
+    >
     <button
-      @click="validateDataSource"
       class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+      @click="validateDataSource"
     >
       Validate and Continue
     </button>
-    <p v-if="error" class="text-red-500 mt-2">{{ error }}</p>
+    <p v-if="error" class="text-red-500 mt-2">
+      {{ error }}
+    </p>
   </div>
 </template>
 

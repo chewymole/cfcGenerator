@@ -1,4 +1,5 @@
 import { log, error } from "../utils/logger";
+import { APP_CONFIG } from "@config/appConfig";
 
 export class TemplateResult {
   constructor(success, content = null, error = null) {
@@ -17,7 +18,7 @@ export class TemplateResult {
 }
 
 export class TemplateProcessor {
-  constructor(baseUrl = window.APP_CONFIG?.BASE_URL || "/") {
+  constructor(baseUrl = APP_CONFIG.BASE_URL || "/") {
     this.baseUrl = baseUrl;
     this.templatePath = `${baseUrl}xsl/`;
     this.cache = new Map();

@@ -3,10 +3,12 @@
     <div v-if="show" class="modal-backdrop">
       <div class="modal-content" @click.stop>
         <div class="modal-header">
-          <h3 class="text-lg font-semibold">{{ title }}</h3>
-          <button @click="$emit('close')" class="modal-close">
+          <h3 class="text-lg font-semibold">
+            {{ title }}
+          </h3>
+          <button class="modal-close" @click="$emit('close')">
             <svg
-              class="w-6 h-6"
+              class="w-6 h-6 text-gray-600 hover:text-gray-800"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -21,7 +23,7 @@
           </button>
         </div>
         <div class="modal-body">
-          <slot></slot>
+          <slot />
         </div>
       </div>
     </div>
@@ -31,7 +33,10 @@
 <script setup>
 defineProps({
   show: Boolean,
-  title: String,
+  title: {
+    type: String,
+    default: "",
+  },
 });
 
 defineEmits(["close"]);

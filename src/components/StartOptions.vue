@@ -5,10 +5,12 @@
       v-if="templateErrors.length"
       class="mb-8 p-4 bg-red-50 border border-red-200 rounded-lg"
     >
-      <h3 class="text-red-800 font-medium mb-2">Template Validation Errors</h3>
+      <h3 class="text-red-800 font-medium mb-2">
+        Template Validation Errors
+      </h3>
       <ul class="list-disc list-inside text-sm text-red-700">
-        <li v-for="(error, index) in templateErrors" :key="index">
-          {{ error }}
+        <li v-for="(err, index) in templateErrors" :key="index">
+          {{ err }}
         </li>
       </ul>
     </div>
@@ -64,7 +66,7 @@
           <!-- Model Options -->
           <router-link
             v-else
-            :to="{ name: 'EditModel', params: { id: 'new' } }"
+            :to="{ name: 'NewModel' }"
             class="block w-full text-left px-4 py-2 text-sm text-blue-600 hover:bg-blue-50 rounded-lg"
           >
             + New Model
@@ -120,8 +122,8 @@
     </Modal>
 
     <!-- Import Data Modal (commented out for now) -->
-    <!--
-    <Modal v-if="showImportModal" @close="showImportModal = false">
+
+    <!-- <Modal v-if="showImportModal" @close="showImportModal = false">
       <template #title>Import Data</template>
       <template #content>
         <div class="space-y-4">
@@ -129,12 +131,22 @@
             <label class="block text-sm font-medium text-gray-700">
               Import URL
             </label>
-            <input
-              v-model="importUrl"
-              type="text"
-              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-              placeholder="Enter API endpoint URL"
-            />
+            <div
+              @click="handleModelImport"
+              class="p-6 border rounded-lg hover:border-blue-500 cursor-pointer transition-colors"
+            >
+              <h3 class="text-xl font-semibold mb-2">Import Existing Model</h3>
+              <p class="text-gray-600">
+                Import a previously exported model file.
+              </p>
+              <input
+                type="file"
+                ref="fileInput"
+                class="hidden"
+                accept=".json"
+                @change="importModelFile"
+              />
+            </div>
           </div>
           <button
             @click="importData"
@@ -144,8 +156,7 @@
           </button>
         </div>
       </template>
-    </Modal>
-    -->
+    </Modal> -->
   </div>
 </template>
 

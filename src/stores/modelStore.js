@@ -1,15 +1,17 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import { useToast } from "vue-toastification";
-import { SQL_TYPE_MAPPING, mapSQLType } from "../utils/columnUtils";
+import { useDataTypeStore } from "./dataTypeStore";
+import { log, error } from "../utils/logger";
 
 export const useModelStore = defineStore("model", () => {
   const models = ref([]);
   const currentModel = ref(null);
-  const modelVersions = ref({}); // Store versions by model ID
+  const modelVersions = ref({});
   const lastBackup = ref(null);
   const toast = useToast();
   const initialized = ref(false);
+  const dataTypeStore = useDataTypeStore();
 
   // Validation rules for models
   const validationRules = {
@@ -26,16 +28,6 @@ export const useModelStore = defineStore("model", () => {
     columns: {
       required: true,
       minItems: 1,
-      rules: {
-        name: {
-          required: true,
-          pattern: /^[a-zA-Z0-9_]+$/,
-        },
-        type: {
-          required: true,
-          enum: Object.values(SQL_TYPE_MAPPING),
-        },
-      },
     },
   };
 
@@ -49,12 +41,12 @@ export const useModelStore = defineStore("model", () => {
       const savedModels = localStorage.getItem("customModels");
       if (savedModels) {
         models.value = JSON.parse(savedModels);
-        console.log("Loaded models from storage:", models.value);
+        log("Loaded models from storage:", models.value);
       }
       initialized.value = true;
       return models.value;
-    } catch (error) {
-      console.error("Error loading models:", error);
+    } catch (err) {
+      error("Error loading models:", err);
       models.value = [];
       return [];
     }
@@ -94,29 +86,51 @@ export const useModelStore = defineStore("model", () => {
           errors.push(`Table ${tableIndex + 1} must have at least one column`);
         } else {
           table.columns.forEach((column, columnIndex) => {
+            // Validate column name
             if (!column.name) {
               errors.push(
                 `Column ${columnIndex + 1} in table ${tableIndex + 1} must have a name`
               );
-            } else if (
-              !validationRules.columns.rules.name.pattern.test(column.name)
-            ) {
+            } else if (!/^[a-zA-Z0-9_]+$/.test(column.name)) {
               errors.push(
                 `Column name '${column.name}' in table ${tableIndex + 1} is invalid`
               );
             }
+
+            // Validate column type
             if (!column.type) {
               errors.push(
                 `Missing type for column '${column.name}' in table ${tableIndex + 1}`
               );
             } else {
-              // Check if it's a valid type from our mapping
-              const validTypes = Object.values(SQL_TYPE_MAPPING); //Object.values(SQL_TYPE_MAPPING);
-              if (!validTypes.includes(column.type)) {
+              const typeFound = dataTypeStore.getTypeByName(column.type);
+
+              if (!typeFound) {
                 errors.push(
                   `Invalid type '${column.type}' for column '${column.name}' in table ${tableIndex + 1}`
                 );
               }
+
+              // Validate length if required
+              if (
+                dataTypeStore.getDefaultLength(column.type) !== null &&
+                !column.length
+              ) {
+                errors.push(
+                  `Length is required for column '${column.name}' of type '${column.type}' in table ${tableIndex + 1}`
+                );
+              }
+            }
+
+            // Validate default value if not nullable
+            if (
+              !column.isNullable &&
+              !column.isPrimaryKey &&
+              column.defaultValue === null
+            ) {
+              // errors.push(
+              //   `Default value is required for non-nullable column '${column.name}' in table ${tableIndex + 1}`
+              // );
             }
           });
         }
@@ -237,9 +251,9 @@ export const useModelStore = defineStore("model", () => {
         success: true,
         modelsImported: importData.models.length,
       };
-    } catch (error) {
-      console.error("Error importing models:", error);
-      throw new Error("Failed to import models: " + error.message);
+    } catch (err) {
+      error("Error importing models:", err);
+      throw new Error("Failed to import models: " + err.message);
     }
   }
 
@@ -277,9 +291,9 @@ export const useModelStore = defineStore("model", () => {
         success: true,
         timestamp: backupData.timestamp,
       };
-    } catch (error) {
-      console.error("Error restoring from backup:", error);
-      throw new Error("Failed to restore from backup: " + error.message);
+    } catch (err) {
+      error("Error restoring from backup:", err);
+      throw new Error("Failed to restore from backup: " + err.message);
     }
   }
 
@@ -290,18 +304,19 @@ export const useModelStore = defineStore("model", () => {
     }
 
     const model = models.value.find((m) => m.id === id);
-    console.log("Getting model by ID:", id, "Found:", model);
+    currentModel.value = model;
+    log("Getting model by ID:", id, "Found:", model);
     return model;
   }
 
   // Save models to localStorage
   function saveModelsToStorage() {
     try {
-      console.log("Saving models to storage:", models.value);
+      log("Saving models to storage:", models.value);
       localStorage.setItem("customModels", JSON.stringify(models.value));
       return true;
-    } catch (error) {
-      console.error("Error saving models:", error);
+    } catch (err) {
+      error("Error saving models:", err);
       return false;
     }
   }
@@ -309,7 +324,7 @@ export const useModelStore = defineStore("model", () => {
   // Create a new model
   async function createModel(modelData) {
     try {
-      console.log("Creating new model:", modelData);
+      log("Creating new model:", modelData);
       const validationErrors = validateModel(modelData);
       if (validationErrors.length > 0) {
         throw new Error(validationErrors.join("\n"));
@@ -326,10 +341,10 @@ export const useModelStore = defineStore("model", () => {
       saveModelsToStorage();
       toast.success("Model created successfully");
       return newModel;
-    } catch (error) {
-      console.error("Error creating model:", error);
-      toast.error(`Failed to create model: ${error.message}`);
-      throw error;
+    } catch (err) {
+      error("Error creating model:", err);
+      toast.error(`Failed to create model: ${err.message}`);
+      throw err;
     }
   }
 
@@ -355,10 +370,10 @@ export const useModelStore = defineStore("model", () => {
       saveModelsToStorage();
       toast.success("Model updated successfully");
       return updatedModel;
-    } catch (error) {
-      console.error("Error updating model:", error);
+    } catch (err) {
+      error("Error updating model:", err);
       toast.error("Failed to update model");
-      throw error;
+      throw err;
     }
   }
 
@@ -387,9 +402,9 @@ export const useModelStore = defineStore("model", () => {
           JSON.stringify(modelVersions.value)
         );
       }
-    } catch (error) {
-      console.error("Error deleting model:", error);
-      throw error;
+    } catch (err) {
+      error("Error deleting model:", err);
+      throw err;
     }
   }
 
@@ -435,9 +450,9 @@ export const useModelStore = defineStore("model", () => {
       }
 
       return newModel;
-    } catch (error) {
-      console.error("Error importing model:", error);
-      throw new Error("Failed to import model: " + error.message);
+    } catch (err) {
+      error("Error importing model:", err);
+      throw new Error("Failed to import model: " + err.message);
     }
   }
 
@@ -477,10 +492,10 @@ export const useModelStore = defineStore("model", () => {
       toast.success("Model renamed successfully");
 
       return model;
-    } catch (error) {
-      console.error("Error renaming model:", error);
-      toast.error(`Failed to rename model: ${error.message}`);
-      throw error;
+    } catch (err) {
+      error("Error renaming model:", err);
+      toast.error(`Failed to rename model: ${err.message}`);
+      throw err;
     }
   }
 
@@ -513,7 +528,9 @@ export const useModelStore = defineStore("model", () => {
   return {
     models,
     currentModel,
+    modelVersions,
     lastBackup,
+    initialized,
     loadModels,
     getSavedModels,
     getModelById,

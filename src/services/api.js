@@ -1,7 +1,9 @@
 import axios from "axios";
 import { useGeneratorStore } from "../stores/generatorStore";
 import { log, error as logError } from "../utils/logger";
-const API_BASE_URL = window.APP_CONFIG?.API_URL || "/api";
+import { APP_CONFIG } from "@config/appConfig";
+
+const API_BASE_URL = APP_CONFIG.API_URL || "/api";
 
 const api = axios.create({
   baseURL: API_BASE_URL,

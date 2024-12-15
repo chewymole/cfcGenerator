@@ -1,5 +1,5 @@
 import { Parser } from "node-sql-parser";
-import { DEFAULT_LENGTHS, mapSQLType } from "./columnUtils";
+import { useDataTypeStore } from "../stores/dataTypeStore";
 
 export function detectDBMS(sqlContent) {
   const sql = sqlContent.toLowerCase();
@@ -79,86 +79,91 @@ function cleanMSSQLSyntax(sql) {
 }
 
 export function parseSQLToTables(sqlContent) {
-  try {
-    const dbType = detectDBMS(sqlContent);
+  //try {
+  const dbType = detectDBMS(sqlContent);
+  const dataTypeStore = useDataTypeStore();
+  console.log("Detected DB Type:", dbType);
 
-    // Clean up MSSQL syntax if needed
-    const cleanSQL =
-      dbType.type === "tsql" ? cleanMSSQLSyntax(sqlContent) : sqlContent;
+  // Clean up MSSQL syntax if needed
+  const cleanSQL =
+    dbType.type === "tsql" ? cleanMSSQLSyntax(sqlContent) : sqlContent;
 
-    const parser = new Parser();
-    const result = parser.parse(cleanSQL, {
-      ...dbType,
-      type: dbType.type === "tsql" ? "mysql" : dbType.type,
-    });
+  const parser = new Parser();
+  const result = parser.parse(cleanSQL, {
+    ...dbType,
+    type: dbType.type === "tsql" ? "mysql" : dbType.type,
+  });
 
-    // Get statements from the ast property
-    const statements = Array.isArray(result.ast) ? result.ast : [result.ast];
+  // Get statements from the ast property
+  const statements = Array.isArray(result.ast) ? result.ast : [result.ast];
 
-    // Filter for CREATE TABLE statements
-    const createStatements = statements.filter(
-      (stmt) => stmt.type === "create" && stmt.keyword === "table"
-    );
+  // Filter for CREATE TABLE statements
+  const createStatements = statements.filter(
+    (stmt) => stmt.type === "create" && stmt.keyword === "table"
+  );
 
-    if (!createStatements.length) {
-      throw new Error("No CREATE TABLE statements found");
-    }
-
-    return createStatements
-      .map((stmt) => ({
-        name: stmt.table[0].table,
-        columns: stmt.create_definitions
-          .filter((def) => def.resource === "column")
-          .map((def) => {
-            const type = mapSQLType(def.definition.dataType.toLowerCase());
-
-            return {
-              name: def.column.column,
-              type,
-              length: def.definition.length || DEFAULT_LENGTHS[type],
-              isPrimaryKey: false,
-              isNullable: !def.nullable || def.nullable.type !== "not null",
-              defaultValue: def.default_val?.value?.value || null,
-              isAutoIncrement: !!def.auto_increment,
-              isUnique: false,
-            };
-          }),
-      }))
-      .map((table) => {
-        // Process constraints after all columns are created
-        const stmt = createStatements.find(
-          (s) => s.table[0].table === table.name
-        );
-
-        // Find primary key and unique constraints
-        stmt.create_definitions
-          .filter((def) => def.resource === "constraint")
-          .forEach((constraint) => {
-            const columns = constraint.definition.map((d) => d.column);
-
-            if (constraint.constraint_type === "primary key") {
-              table.columns.forEach((col) => {
-                if (columns.includes(col.name)) {
-                  col.isPrimaryKey = true;
-                  col.isNullable = false;
-                }
-              });
-            }
-
-            if (constraint.constraint_type === "unique key") {
-              table.columns.forEach((col) => {
-                if (columns.includes(col.name)) {
-                  col.isUnique = true;
-                }
-              });
-            }
-          });
-
-        return table;
-      });
-  } catch (error) {
-    throw new Error(`Failed to parse SQL: ${error.message}`);
+  if (!createStatements.length) {
+    throw new Error("No CREATE TABLE statements found");
   }
+
+  return createStatements
+    .map((stmt) => ({
+      name: stmt.table[0].table,
+      columns: stmt.create_definitions
+        .filter((def) => def.resource === "column")
+        .map((def) => {
+          // const type = dataTypeStore.mapSQLType(
+          //   def.definition.dataType.toLowerCase()
+          // );
+          const type = def.definition.dataType.toLowerCase();
+          return {
+            name: def.column.column,
+            type,
+            length:
+              def.definition.length || dataTypeStore.getDefaultLength(type),
+            isPrimaryKey: false,
+            isNullable: !def.nullable || def.nullable.type !== "not null",
+            defaultValue: def.default_val?.value?.value || null,
+            isAutoIncrement: !!def.auto_increment,
+            isUnique: false,
+          };
+        }),
+    }))
+    .map((table) => {
+      // Process constraints after all columns are created
+      const stmt = createStatements.find(
+        (s) => s.table[0].table === table.name
+      );
+
+      // Find primary key and unique constraints
+      stmt.create_definitions
+        .filter((def) => def.resource === "constraint")
+        .forEach((constraint) => {
+          const columns = constraint.definition.map((d) => d.column);
+
+          if (constraint.constraint_type === "primary key") {
+            table.columns.forEach((col) => {
+              if (columns.includes(col.name)) {
+                col.isPrimaryKey = true;
+                col.isNullable = false;
+              }
+            });
+          }
+
+          if (constraint.constraint_type === "unique key") {
+            table.columns.forEach((col) => {
+              if (columns.includes(col.name)) {
+                col.isUnique = true;
+              }
+            });
+          }
+        });
+
+      return table;
+    });
+  //} catch (error) {
+  throw new Error(`Failed to parse SQL: ${error.message}`);
+  //}
 }
 
 // Helper function to validate the parsed tables
@@ -194,9 +199,9 @@ export function validateParsedTables(tables) {
 
     // Check for primary key
     if (!table.columns?.some((col) => col.isPrimaryKey)) {
-      errors.push(
-        `Table "${table.name}" must have at least one primary key column`
-      );
+      // errors.push(
+      //   `Table "${table.name}" must have at least one primary key column`
+      // );
     }
   });
 

@@ -2,24 +2,24 @@
   <div class="debug-settings divide-y divide-gray-200">
     <!-- Debug Mode -->
     <div class="setting-section py-4">
-      <h4 class="text-lg font-medium text-gray-900 mb-4">Debug Options</h4>
+      <h4 class="text-lg font-medium text-gray-900 mb-4">
+        Debug Options
+      </h4>
       <div class="space-y-4">
         <div
           class="flex items-center justify-between bg-white p-3 rounded-lg border border-gray-200"
         >
           <div class="flex flex-col">
             <span class="text-gray-900 font-medium">Debug Mode</span>
-            <span class="text-sm text-gray-500"
-              >Enable detailed logging and debugging features</span
-            >
+            <span class="text-sm text-gray-500">Enable detailed logging and debugging features</span>
           </div>
           <label class="switch">
             <input
               type="checkbox"
               :checked="settings.debugMode"
               @change="settings.toggleDebug()"
-            />
-            <span class="slider round"></span>
+            >
+            <span class="slider round" />
           </label>
         </div>
 
@@ -28,20 +28,28 @@
         >
           <div class="flex flex-col">
             <span class="text-gray-900 font-medium">Log Level</span>
-            <span class="text-sm text-gray-500"
-              >Set the detail level of application logs</span
-            >
+            <span class="text-sm text-gray-500">Set the detail level of application logs</span>
           </div>
           <select
             v-model="selectedLogLevel"
             class="form-select rounded border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
             @change="updateLogLevel"
           >
-            <option value="none">None</option>
-            <option value="error">Error</option>
-            <option value="warn">Warning</option>
-            <option value="info">Info</option>
-            <option value="debug">Debug</option>
+            <option value="none">
+              None
+            </option>
+            <option value="error">
+              Error
+            </option>
+            <option value="warn">
+              Warning
+            </option>
+            <option value="info">
+              Info
+            </option>
+            <option value="debug">
+              Debug
+            </option>
           </select>
         </div>
       </div>
@@ -49,13 +57,15 @@
 
     <!-- Environment Info -->
     <div class="setting-section py-4">
-      <h4 class="text-lg font-medium text-gray-900 mb-4">Environment</h4>
+      <h4 class="text-lg font-medium text-gray-900 mb-4">
+        Environment
+      </h4>
       <div class="bg-white p-4 rounded-lg border border-gray-200">
         <div class="flex items-center space-x-3">
           <div
             class="w-3 h-3 rounded-full"
             :class="settings.isLocal ? 'bg-green-500' : 'bg-blue-500'"
-          ></div>
+          />
           <div class="flex flex-col">
             <span class="text-gray-900 font-medium">
               {{
@@ -74,7 +84,7 @@
       </div>
     </div>
 
-    <!-- Template Editor (only in local environment) -->
+    <!-- Template Editor (only in local environment) 
     <div v-if="settings.isLocal" class="setting-section py-4">
       <h4 class="text-lg font-medium text-gray-900 mb-4">Template Editor</h4>
       <div class="bg-white p-4 rounded-lg border border-gray-200">
@@ -91,7 +101,7 @@
           </p>
         </div>
       </div>
-    </div>
+    </div>-->
   </div>
 </template>
 

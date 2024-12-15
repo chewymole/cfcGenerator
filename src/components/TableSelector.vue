@@ -1,8 +1,14 @@
 <template>
   <div>
-    <h2 class="text-xl font-semibold mb-4">Select Tables</h2>
-    <div v-if="loading" class="text-gray-600">Loading tables...</div>
-    <div v-else-if="error" class="text-red-600">{{ error }}</div>
+    <h2 class="text-xl font-semibold mb-4">
+      Select Tables
+    </h2>
+    <div v-if="loading" class="text-gray-600">
+      Loading tables...
+    </div>
+    <div v-else-if="error" class="text-red-600">
+      {{ error }}
+    </div>
     <div v-else-if="!tables || tables.length === 0" class="text-gray-600">
       No tables found for this data source.
     </div>
@@ -24,9 +30,9 @@
       </div> -->
 
       <button
-        @click="submitSelection"
         class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
         :disabled="selectedTables.length === 0"
+        @click="submitSelection"
       >
         Continue
       </button>

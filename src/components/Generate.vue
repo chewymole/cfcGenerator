@@ -2,13 +2,15 @@
   <div class="p-6">
     <div class="max-w-7xl mx-auto">
       <div class="mb-6">
-        <h2 class="text-lg font-medium text-gray-900">Generate Code</h2>
+        <h2 class="text-lg font-medium text-gray-900">
+          Generate Code
+        </h2>
         <p class="mt-1 text-sm text-gray-500">
           Using template: {{ store.getSelectedTemplate()?.name }}
         </p>
         <button
-          @click="isTemplateModalOpen = true"
           class="ml-2 text-sm text-blue-600 hover:text-blue-800"
+          @click="isTemplateModalOpen = true"
         >
           View Template
         </button>
@@ -17,7 +19,9 @@
       <div class="space-y-4">
         <!-- Selected Tables -->
         <div class="bg-white rounded-lg shadow p-4">
-          <h3 class="text-md font-medium mb-2">Selected Tables</h3>
+          <h3 class="text-md font-medium mb-2">
+            Selected Tables
+          </h3>
           <div class="space-y-2">
             <div
               v-for="table in selectedTables"
@@ -31,9 +35,9 @@
 
         <!-- Generate Button -->
         <button
-          @click="generateCode"
           class="w-full inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700"
           :disabled="loading"
+          @click="generateCode"
         >
           {{ loading ? "Generating..." : "Generate Code" }}
         </button>
@@ -49,8 +53,8 @@
   <Modal
     v-if="isTemplateModalOpen"
     :show="isTemplateModalOpen"
-    @close="isTemplateModalOpen = false"
     title="Template Details"
+    @close="isTemplateModalOpen = false"
   >
     <div class="space-y-4">
       <div>

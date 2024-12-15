@@ -1,6 +1,7 @@
 import { useGeneratorStore } from "../stores/generatorStore";
-import { log } from "../utils/logger";
+import { log, error } from "../utils/logger";
 import { TemplateValidator } from "./templateValidator";
+import { fileManager } from "./fileManager";
 
 const parseXml = (xmlString) => {
   const parser = new DOMParser();
@@ -76,7 +77,7 @@ function parseTemplates(xmlDoc) {
   return templates;
 }
 
-export async function loadTemplates() {
+async function loadTemplates() {
   const store = useGeneratorStore();
 
   try {
@@ -128,6 +129,63 @@ export async function loadTemplates() {
   }
 }
 
+class TemplateFileService {
+  static async loadTemplateContent(templatePath) {
+    try {
+      log("Loading template content:", templatePath);
+      const result = await fileManager.readFile(templatePath);
+      if (!result.success) {
+        throw new Error(result.error);
+      }
+      return result.data;
+    } catch (err) {
+      error("Failed to load template content:", err);
+      throw err;
+    }
+  }
+
+  static async loadGeneratorXml() {
+    try {
+      const result = await fileManager.readFile("/xsl/generator.xml");
+      if (!result.success) {
+        throw new Error(result.error);
+      }
+      return result.data;
+    } catch (err) {
+      error("Failed to load generator XML:", err);
+      throw err;
+    }
+  }
+
+  static async saveGeneratorXml(content) {
+    try {
+      const result = await fileManager.writeFile("/xsl/generator.xml", content);
+      if (!result.success) {
+        throw new Error(result.error);
+      }
+      return true;
+    } catch (err) {
+      error("Failed to save generator XML:", err);
+      throw err;
+    }
+  }
+
+  static async saveTemplateFile(templatePath, content) {
+    try {
+      const result = await fileManager.writeFile(templatePath, content);
+      if (!result.success) {
+        throw new Error(result.error);
+      }
+      return true;
+    } catch (err) {
+      error("Failed to save template file:", err);
+      throw err;
+    }
+  }
+}
+
 export {
+  loadTemplates,
   parseTemplates, // if needed elsewhere
+  TemplateFileService,
 };

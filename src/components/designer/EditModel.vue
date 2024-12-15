@@ -16,25 +16,25 @@
             <!-- Left side: Model details -->
             <div class="space-y-4">
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1"
-                  >Model Name</label
-                >
+                <label class="block text-sm font-medium text-gray-700 mb-1">
+                  Model Name
+                </label>
                 <input
                   v-model="model.name"
                   class="w-full px-3 py-2 border rounded hover:border-gray-400 focus:border-blue-500 focus:outline-none"
                   :class="{ 'border-red-500': !model.name }"
                   placeholder="Model Name"
-                />
+                >
               </div>
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1"
-                  >Base Path (optional)</label
-                >
+                <label class="block text-sm font-medium text-gray-700 mb-1">
+                  Base Path (optional)
+                </label>
                 <input
                   v-model="model.path"
                   class="w-full px-3 py-2 border rounded hover:border-gray-400 focus:border-blue-500 focus:outline-none"
                   placeholder="Base Path"
-                />
+                >
               </div>
             </div>
 
@@ -42,14 +42,13 @@
             <div class="space-y-4">
               <div class="flex justify-end space-x-2">
                 <button
-                  @click="exportModel"
                   class="px-4 py-2 border rounded hover:bg-gray-50"
                   :disabled="saving"
+                  @click="exportModel"
                 >
                   Export Model
                 </button>
                 <button
-                  @click="saveChanges"
                   class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
                   :disabled="saving"
                   :title="
@@ -57,6 +56,7 @@
                       ? validationErrors.join('\n')
                       : 'Save changes to model'
                   "
+                  @click="saveChanges"
                 >
                   <span v-if="saving" class="flex items-center">
                     <svg
@@ -72,52 +72,54 @@
                         r="10"
                         stroke="currentColor"
                         stroke-width="4"
-                      ></circle>
+                      />
                       <path
                         class="opacity-75"
                         fill="currentColor"
                         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      ></path>
+                      />
                     </svg>
                     Saving...
                   </span>
                   <span v-else>Save Changes</span>
                 </button>
                 <button
-                  @click="confirmDelete"
                   class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
                   :disabled="saving"
+                  @click="confirmDelete"
                 >
                   {{ saving ? "Deleting..." : "Delete Model" }}
                 </button>
               </div>
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1"
-                  >Database Type</label
-                >
+                <label class="block text-sm font-medium text-gray-700 mb-1">Database Type</label>
                 <select
                   v-model="model.dbType"
                   class="w-full px-3 py-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
                 >
-                  <option value="MSSQL">SQL Server</option>
-                  <option value="MySQL">MySQL</option>
-                  <option value="PostgreSQL">PostgreSQL</option>
-                  <option value="Oracle">Oracle</option>
-                  <option value="SQLite">SQLite</option>
+                  <option
+                    v-for="dbType in availableDBTypes"
+                    :key="dbType.value"
+                    :value="dbType.value"
+                  >
+                    {{ dbType.label }}
+                  </option>
                 </select>
               </div>
               <div class="space-y-4">
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1"
-                    >Target Language</label
-                  >
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Target Language</label>
                   <select
                     v-model="model.language"
                     class="w-full px-3 py-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
                   >
-                    <option value="cfml">ColdFusion</option>
-                    <option value="JavaScript">JavaScript</option>
-                    <option value="Laravel">Laravel (PHP)</option>
+                    <option
+                      v-for="langType in availableLanguages"
+                      :key="langType.value"
+                      :value="langType.value"
+                    >
+                      {{ langType.label }}
+                    </option>
                   </select>
                   <p class="mt-1 text-sm text-gray-500">
                     This will determine the data type mappings and available
@@ -140,30 +142,26 @@
             <div class="grid grid-cols-2 gap-4 mb-6">
               <div class="space-y-3">
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1"
-                    >Table Name</label
-                  >
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Table Name</label>
                   <input
                     v-model="table.name"
                     class="w-full px-3 py-2 border rounded hover:border-gray-400 focus:border-blue-500 focus:outline-none"
                     placeholder="Table Name"
-                  />
+                  >
                 </div>
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1"
-                    >Table Path (optional)</label
-                  >
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Table Path (optional)</label>
                   <input
                     v-model="table.path"
                     class="w-full px-3 py-2 border rounded hover:border-gray-400 focus:border-blue-500 focus:outline-none"
                     placeholder="Table Path"
-                  />
+                  >
                 </div>
               </div>
               <div class="flex justify-end">
                 <button
-                  @click="removeTable(tableIndex)"
                   class="text-red-500 hover:text-red-700"
+                  @click="removeTable(tableIndex)"
                 >
                   Remove Table
                 </button>
@@ -204,7 +202,7 @@
                   v-model="column.name"
                   class="col-span-3 px-2 py-1 border rounded hover:border-gray-400 focus:border-blue-500 focus:outline-none"
                   placeholder="Column name"
-                />
+                >
 
                 <!-- Data Type -->
                 <select
@@ -235,14 +233,14 @@
                     v-model="column.length"
                     type="number"
                     class="w-full px-2 py-1 border rounded hover:border-gray-400 focus:border-blue-500 focus:outline-none"
-                    :placeholder="DEFAULT_LENGTHS[column.type]"
-                  />
+                    :placeholder="getDefaultLength(column.type)"
+                  >
                   <div
                     v-if="showLengthFor(column.type)"
                     class="absolute hidden group-hover:block bg-gray-800 text-white text-xs rounded p-2 -top-8 left-0 w-48"
                   >
                     Recommended length for {{ column.type }}:
-                    {{ DEFAULT_LENGTHS[column.type] }}
+                    {{ getDefaultLength(column.type) }}
                   </div>
                 </div>
 
@@ -250,22 +248,22 @@
                 <div class="col-span-3 flex space-x-4">
                   <label class="flex items-center space-x-2">
                     <input
-                      type="checkbox"
                       v-model="column.isPrimaryKey"
-                      @change="handlePrimaryKeyChange(column)"
+                      type="checkbox"
                       class="rounded border-gray-300 text-blue-500 focus:ring-blue-500"
-                    />
+                      @change="handlePrimaryKeyChange(column)"
+                    >
                     <span class="text-sm">Primary Key</span>
                   </label>
 
                   <label class="flex items-center space-x-2">
                     <input
-                      type="checkbox"
                       v-model="column.isNullable"
+                      type="checkbox"
                       :disabled="column.isPrimaryKey"
-                      @change="handleNullableChange(column)"
                       class="rounded border-gray-300 text-blue-500 focus:ring-blue-500"
-                    />
+                      @change="handleNullableChange(column)"
+                    >
                     <span class="text-sm">Nullable</span>
                   </label>
                 </div>
@@ -276,14 +274,14 @@
                   v-model="column.defaultValue"
                   class="col-span-2 px-2 py-1 border rounded hover:border-gray-400 focus:border-blue-500 focus:outline-none"
                   :placeholder="getDefaultValuePlaceholder(column.type)"
-                />
-                <div v-else class="col-span-2"></div>
+                >
+                <div v-else class="col-span-2" />
 
                 <!-- Remove Button -->
                 <button
-                  @click="removeColumn(table, columnIndex)"
                   class="col-span-1 px-2 py-1 text-red-500 hover:text-red-700"
                   title="Remove Column"
+                  @click="removeColumn(table, columnIndex)"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -302,8 +300,8 @@
 
               <!-- Add Column Button -->
               <button
-                @click="addColumn(table)"
                 class="mt-2 px-4 py-2 text-sm border rounded hover:bg-gray-50 w-full"
+                @click="addColumn(table)"
               >
                 Add Column
               </button>
@@ -311,8 +309,8 @@
           </div>
 
           <button
-            @click="addTable"
             class="w-full px-4 py-2 border-2 border-dashed rounded-lg hover:bg-gray-50"
+            @click="addTable"
           >
             Add Table
           </button>
@@ -327,13 +325,15 @@ import { ref, computed, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useModelStore } from "../../stores/modelStore";
 import { useToast } from "vue-toastification";
+import {useDataTypeStore } from "../../stores/dataTypeStore";
 import {
-  DEFAULT_LENGTHS,
-  DATA_TYPES,
-  getDefaultValuePlaceholder,
-  getDataTypesForLanguage,
+  getAvailableTypes,
+  getDefaultValuePlaceholder,  
+  getDefaultLength
 } from "../../utils/columnUtils";
 
+
+const dataTypeStore = useDataTypeStore();
 const route = useRoute();
 const router = useRouter();
 const modelStore = useModelStore();
@@ -406,7 +406,7 @@ function addTable() {
       {
         name: "",
         type: "string",
-        length: DEFAULT_LENGTHS.string,
+        length: "1",
         isPrimaryKey: false,
         isNullable: true,
         defaultValue: null,
@@ -425,7 +425,7 @@ function addColumn(table) {
   table.columns.push({
     name: "",
     type: "string",
-    length: DEFAULT_LENGTHS.string,
+    length: "1",
     isPrimaryKey: false,
     isNullable: true,
     defaultValue: null,
@@ -449,7 +449,9 @@ function showLengthFor(type) {
 }
 
 function handleTypeChange(column) {
-  column.length = DEFAULT_LENGTHS[column.type];
+
+  column.length = getDefaultLength(column.type);
+  //DEFAULT_LENGTHS[column.type];
   // ... rest of type change handling (same as ManualEntry)
 }
 
@@ -467,6 +469,7 @@ function handleNullableChange(column) {
 }
 
 onMounted(async () => {
+  dataTypeStore.initialize(); // init our dt store  
   await loadModel();
 });
 
@@ -558,7 +561,24 @@ async function saveChanges() {
 }
 
 // Add computed property for data types
-const availableTypes = computed(() => DATA_TYPES);
+const availableTypes = computed(() => {
+  const types = getAvailableTypes();
+  // Group types by category
+  const groupedTypes = Object.entries(types).reduce((acc, [key, type]) => {
+    const category = type.category;
+    if (!acc[category]) {
+      acc[category] = [];
+    }
+    acc[category].push({
+      value: key,
+      label: type.label,
+      description: type.description
+    });
+    return acc;
+  }, {});
 
-// ... rest of your component code ...
+  return groupedTypes || {};
+});
+const availableDBTypes = computed(() => useDataTypeStore().getSupportedDatabases() || []);
+const availableLanguages = computed(() => useDataTypeStore().getSupportedLanguages() || []);
 </script>

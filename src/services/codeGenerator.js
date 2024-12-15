@@ -229,12 +229,12 @@ class CodeGenerator {
           log("Added child result:", results[results.length - 1]);
         } else {
           error(
-            `Child template generation failed for ${tableName}:`,
+            `Child template generation failed for table ${tableName} template ${child.ref}:`,
             childResult.error
           );
         }
       } catch (err) {
-        error(`Failed to process child template for ${tableName}:`, err);
+        error(`Failed to process child template for table ${tableName}:`, err);
       }
     }
 

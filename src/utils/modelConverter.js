@@ -1,5 +1,6 @@
+import { log, error } from "./logger";
 export function convertModelToXML(model) {
-  console.log("Converting model:", model); // Debug log
+  log("Converting model:", model); // Debug log
 
   if (!model) {
     throw new Error("Model is undefined or null");
@@ -78,8 +79,7 @@ export function convertModelToXML(model) {
   // });
 
   // xml += "</bean></root>";
-  // console.log("Generated XML:", xml); // Debug log
-  // return xml;
+  // log("Generated XML:", xml); // Debug log  // return xml;
 }
 
 // Helper function to map SQL types to CF SQL types

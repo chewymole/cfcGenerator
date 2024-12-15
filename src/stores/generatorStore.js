@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
-import { log } from "../utils/logger";
+import { log, error } from "../utils/logger";
 
 const CACHE_SIZE_LIMIT = 5 * 1024 * 1024; // 5MB limit
 const MAX_CACHE_ENTRIES = 10; // Maximum number of datasources to cache
@@ -27,7 +27,7 @@ export const useGeneratorStore = defineStore("generator", () => {
       const cached = localStorage.getItem("cachedDatasources");
       return cached ? JSON.parse(cached) : {};
     } catch (error) {
-      log("Error loading cache:", error);
+      error("Error loading cache:", error);
       return {};
     }
   }
@@ -37,7 +37,7 @@ export const useGeneratorStore = defineStore("generator", () => {
       const cacheStr = JSON.stringify(cachedDatasources.value);
       return new Blob([cacheStr]).size;
     } catch (error) {
-      log("Error calculating cache size:", error);
+      error("Error calculating cache size:", error);
       return 0;
     }
   }
@@ -67,7 +67,7 @@ export const useGeneratorStore = defineStore("generator", () => {
         saveCache();
       }
     } catch (error) {
-      log("Error trimming cache:", error);
+      error("Error trimming cache:", error);
     }
   }
 
@@ -87,7 +87,7 @@ export const useGeneratorStore = defineStore("generator", () => {
         );
         saveCache();
       }
-      log("Error saving cache:", error);
+      error("Error saving cache:", error);
     }
   }
 
@@ -102,7 +102,7 @@ export const useGeneratorStore = defineStore("generator", () => {
       trimCacheIfNeeded();
       saveCache();
     } catch (error) {
-      log("Error caching datasource:", error);
+      error("Error caching datasource:", error);
     }
   }
 
@@ -115,7 +115,7 @@ export const useGeneratorStore = defineStore("generator", () => {
       delete cachedDatasources.value[datasourceName];
       saveCache();
     } catch (error) {
-      log("Error clearing cache:", error);
+      error("Error clearing cache:", error);
     }
   }
 
@@ -124,7 +124,7 @@ export const useGeneratorStore = defineStore("generator", () => {
       cachedDatasources.value = {};
       localStorage.removeItem("cachedDatasources");
     } catch (error) {
-      log("Error clearing all cache:", error);
+      error("Error clearing all cache:", error);
     }
   }
 

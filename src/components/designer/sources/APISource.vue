@@ -7,11 +7,13 @@
         type="text"
         class="w-full px-4 py-2 border rounded"
         placeholder="Enter API endpoint"
-      />
+      >
     </div>
 
     <div v-if="tables.length" class="space-y-2">
-      <h4 class="font-semibold">Available Tables</h4>
+      <h4 class="font-semibold">
+        Available Tables
+      </h4>
       <div class="grid grid-cols-3 gap-4">
         <div
           v-for="table in tables"
@@ -24,9 +26,9 @@
     </div>
 
     <button
-      @click="fetchTables"
       class="px-4 py-2 bg-blue-500 text-white rounded"
       :disabled="!apiEndpoint"
+      @click="fetchTables"
     >
       Fetch Tables
     </button>

@@ -1,5 +1,6 @@
 import { log, error } from "../utils/logger";
-import { LANGUAGE_TO_SQL_TYPES, getActualSQLType } from "../utils/columnUtils";
+import { useDataTypeStore } from "../stores/dataTypeStore";
+import { mapSQLType, mapTypeToLanguage } from "../utils/columnUtils";
 
 class XMLResult {
   constructor(success, content = null, error = null) {
@@ -28,17 +29,13 @@ class XMLHandler {
   }
 
   getLanguageDataTypes(language, type) {
-    // Get the language-specific type mappings
-    const languageTypes = LANGUAGE_TO_SQL_TYPES[language] || {};
-    // Find the key where the SQL type exists in the comma-separated list
-    const languageType = Object.entries(languageTypes).find(([key, value]) =>
-      value
-        .split(",")
-        .map((t) => t.trim().toLowerCase())
-        .includes(type.toLowerCase())
-    );
-    // Return the found key or fallback to original type
-    return languageType ? languageType[0] : type;
+    const store = useDataTypeStore();
+
+    // First map the SQL type to our normalized type
+    const normalizedType = mapSQLType(type);
+
+    // Then map it to the target language
+    return mapTypeToLanguage(normalizedType, "sql", language) || type;
   }
 
   validateXML(xmlString) {
@@ -93,12 +90,12 @@ class XMLHandler {
 
       const xmlString = this.serializer.serializeToString(doc);
 
-      console.log("Generated XML structure:", xmlString);
-      console.log(
+      log("Generated XML structure:", xmlString);
+      log(
         "Primary key columns:",
         table.columns.filter((c) => c.primaryKey)
       );
-      console.log("Sample column data:", table.columns[0]);
+      log("Sample column data:", table.columns[0]);
 
       return XMLResult.success(xmlString);
     } catch (err) {
