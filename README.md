@@ -1,6 +1,6 @@
 # Code Generator
 
-```
+```BASH
   _____________________
  |  _________________  |
  | | Code Generator  | |
@@ -42,7 +42,7 @@
     -   [License](#license)
     -   [References](#references)
 
-## Related Documentation:
+## Related Documentation
 
 -   [Template Definition Documentation](./public/xsl/generator_guide.md)
 -   [Writing Templates User Guide](./public/xsl/templates_guide.md)
@@ -51,11 +51,11 @@
 
 This is my first real VueJS project, so please don't judge me too harshly. I welcome any suggestions!
 
-## THIS IS A DEVELOPMENT TOOL:
+## THIS IS A DEVELOPMENT TOOL
 
 Please do not use this on a production server!! This tool will expose your database schema. Please use it for testing and development purposes only.
 
-## About:
+## About
 
 This project is a Vue 3 front-end application. The origial project was created by [deanlaw](https://github.com/deanlaw) that used Flash as a front-end, it also required you to run it on a ColdFusion server and have the CF Admin password to generate the code.
 
@@ -63,8 +63,18 @@ One of the awesome parts from Dean's original project is that he used XSL style-
 
 This project comes with an optional ColdFusion API that can return the database schema via tableXML as a JSON response. It does not require the CF Admin password to work. The API is optional, but to use it, you must have a CF or Lucee server, you must have a valid Datasource configured on that server and you must know the Datasource name.
 
-### Version 2 Improvements:
+### Version 2 Improvements
 
+2.1.0:
+New Adhoc Model creator for creating new models in the selected language without the need to connect to a database. You can now import a SQL CREATE TABLE sql file in as a model. Or create a new model right in the application.
+New XML index file design to manage the templates and make it easier to add new ones.
+New icons for the different file types.
+New Template editor for editing in the app the XSL and XML files.
+Templates now support child templates, so you can create more complex templates if needed.
+Supported Database Types: All previous plus any you define in the type config files.
+Supported Language Types: All previous plus any you define in the type config files.
+
+2.0.0:
 Enhanced type system with comprehensive language-to-SQL and SQL-to-Language mappings
 Type support for multiple programming languages including:
 
@@ -121,7 +131,7 @@ Better error handling and debugging capabilities
     -   API Routes
 -   more to come...
 
-### Language Support:
+### Language Support
 
 The generator now supports type mapping for:
 
@@ -140,7 +150,7 @@ The generator now supports type mapping for:
     -   PHP native types
     -   Laravel framework types
 
-### Improvments over the original project:
+### Improvments over the original project
 
 I improved the XML index file (yac.XML now named generator.xml) that describes the templates. I added a Name, Description, catigories, subcatigories and syntax style attributes. These are displayed in the UI to help the user identify what the template will be building.
 
@@ -153,11 +163,11 @@ I set a limit on the total tables returned, since this could lead to time-out re
 ~~There is currently a limit of 1 file created per table. I may revisit this limitation later to address, but for now, you may need to run the tool once for one set of files, and again for a different type.~~
 Now multiple files are supported through the use of child templates. See the templates guide above.
 
-### API:
+### API
 
 I have included an optional [Taffy.io](https://taffy.io/) API that is preconfigured, and can connect to any datasource configured in your Coldfusion/Lucee Server, given you know the Datasource name. You can use this API or you can use what ever API you want to generate the Table XML and datasource name validation, just modify the config.js files to point to your API. The defualt is:
 
-```
+```JS
 API_BASE_URL=http://localhost:8080/api/index.cfm?endpoint=
 ```
 
@@ -219,13 +229,15 @@ Will return true if the given datasource name is valid and exists.
     -   CF Service's
     -   CF Bean's
 
-### Other features:
+### Other features
 
-These templates are easy to modify to your liking, and you are not limited to using this for ColdFusion, you can use it for any language that you want, just make the new templates and style-sheets. See the template guide above.
+These templates are easy to modify to your liking, and you are not limited to using this for any one language, you can use it for any language that you want or multiple languages, just make the new templates and style-sheets. See the template guide above.
 
 ## Languages
 
 -   Vue 3 with `<script setup>` SFCs
+-   XML/XSL Template designer
+-   ES6 JavaScript
 -   ColdFusion / Lucee backend (CFML)
     -   Taffy.io API for Datasource and Table XML generation (JSON/REST)
 
@@ -281,7 +293,7 @@ These templates are easy to modify to your liking, and you are not limited to us
 5. If you roll your own API, use the included code as a starter.
 
     1. The frontend expects the following endpoints:
-       `GET:/tables?datasourceName=`<datasource name>
+       `GET:/tables?datasourceName=`datasource name
        `POST:/datasource { "datasourceName":"<datasource name>" }`
        Use the `/resources` as a starting point, then review the code in the `/model/` for how to parse the different database types and how it generates the table XML.
 
