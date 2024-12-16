@@ -107,6 +107,10 @@ export class TemplateProcessor {
         );
       }
 
+      // Verify the stylesheet was parsed correctly
+      const templates = xslDoc.getElementsByTagName("template");
+      log("Found templates:", templates.length);
+
       const processor = new XSLTProcessor();
       processor.importStylesheet(xslDoc);
 
