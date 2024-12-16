@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-  <xsl:include href="../shared/dataTypeMapping.xsl"/>
+  
   <xsl:output method="text" indent="no"/>  
   <xsl:template match="/">   
 const { Model, DataTypes } = require('sequelize');
@@ -36,8 +36,18 @@ module.exports = <xsl:value-of select="//bean/@name"/>;
 
   <xsl:template name="mapDataType">
     <xsl:param name="dataType"/>
-    <xsl:call-template name="mapJavaScriptType">
-      <xsl:with-param name="dataType" select="$dataType"/>
-    </xsl:call-template>
+    <xsl:choose>
+      <xsl:when test="$dataType = 'numeric'">number</xsl:when>
+      <xsl:when test="$dataType = 'decimal'">number</xsl:when>
+      <xsl:when test="$dataType = 'float'">number</xsl:when>
+      <xsl:when test="$dataType = 'date'">Date</xsl:when>
+      <xsl:when test="$dataType = 'datetime'">Date</xsl:when>
+      <xsl:when test="$dataType = 'timestamp'">Date</xsl:when>
+      <xsl:when test="$dataType = 'string'">string</xsl:when>
+      <xsl:when test="$dataType = 'text'">string</xsl:when>
+      <xsl:when test="$dataType = 'longtext'">string</xsl:when>
+      <xsl:when test="$dataType = 'boolean'">boolean</xsl:when>
+      <xsl:otherwise>string</xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>

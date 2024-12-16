@@ -113,9 +113,16 @@
             </button>
           </div>
 
-          <h3 class="font-bold">
-            {{ template.name }}
-          </h3>
+          <div class="flex">
+            <img
+              class="w-5 h-5 mr-2"                
+              :src="getCategoryIcon(template.categoryIcon)"
+              :alt="`${template.name} icon`"
+            >
+            <h3 class="font-bold w-90%">
+              {{ template.name }}
+            </h3>
+          </div>
           <p>
             {{ template.style }} based {{ template.language }} ({{
               template.filetype
@@ -452,6 +459,11 @@ async function selectTemplate(template) {
     try {
       store.setWrapperFile(template.name);
       store.setIncludes(template.includes);
+      // Validate store data before proceeding
+      if (!store.wrapperFile || !store.includes) {
+        logError(`Template ${template.displayName} failed to be stored:`,store)
+        return;
+      }
       log(
         `Template ${template.displayName} selected with wrapper:`,
         template.name,

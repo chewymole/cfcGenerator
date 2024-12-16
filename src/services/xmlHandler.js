@@ -46,6 +46,12 @@ class XMLHandler {
       if (parseError) {
         return XMLResult.failure(`Invalid XML: ${parseError.textContent}`);
       }
+      // Test that we can actually find the bean element
+      const beanElement = doc.getElementsByTagName("bean")[0];
+      log("Found bean element:", beanElement);
+      if (!beanElement) {
+        return XMLResult.failure(`Invalid Bean: ${beanElement} `);
+      }
 
       return XMLResult.success(doc);
     } catch (err) {
@@ -233,6 +239,7 @@ class XMLHandler {
         document
       );
       if (!fragment || !fragment.textContent.trim()) {
+        log("XML String to transform: ", xsltProcessor);
         return XMLResult.failure("Transformation produced no content");
       }
 
