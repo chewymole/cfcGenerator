@@ -1,0 +1,14 @@
+[
+  {
+    "name": "README",
+    "path": "docs/readme.md"
+  },
+  {
+    "name": "Generator XML Information",
+    "path": "docs/generator_guide.md"
+  },
+  {
+    "name": "Template Guide",
+    "path": "docs/templates_guide.md"
+  }
+]

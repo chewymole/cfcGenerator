@@ -160,6 +160,7 @@
           <dbType>mysql,mssql,postgresql</dbType>
         </compatibility>
       </template>
+
     </subcategory>
   </category>
 

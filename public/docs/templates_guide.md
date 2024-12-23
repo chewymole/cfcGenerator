@@ -1,5 +1,9 @@
 # Writing Custom XSL Templates - User Guide
 
+This guide is for writing custom XSL templates for the Code Generator. It is not a guide for writing XSL templates for other purposes. The point of this project is to make it easy to generate code for a database driven project/codebase. You can use the XSLT documentation from [W3Schools](https://www.w3schools.com/xml/xsl_intro.asp) or another resource as a reference, and is using standard XML and XSLT syntax. The parser is using the xml2js library to parse the XML data and the standard DOM parser to generate the code. You man need those for reference if you are not familiar with them.
+
+Think of the templates as stencils that represent code that will be generated after the parser has transformed the XML data into the language of your choice. XSLT is a way to transform XML data into other formats, such as HTML, PDF, or even code. We use the XSLT as a place holder for the table/model/column data that will be used to generate the code.
+
 ## Available Model Data Structure
 
 When writing templates, you have access to the following model structure:
@@ -45,7 +49,6 @@ xml
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <xsl:output method="text" indent="no"/>
-    <!-- Main template -->
     <xsl:template match="/">
       <!-- Your template code here -->
     </xsl:template>
@@ -120,6 +123,16 @@ Template Examples
 </xsl:template>
 ```
 
+would create the following code:
+
+```js
+class YourModelName {
+	private columnName1;
+	private columnName2;
+	private columnName3;
+}
+```
+
 #### Generate Properties with Types
 
 ```xml
@@ -128,6 +141,14 @@ Template Examples
 	public <xsl:value-of select="type"/><xsl:text> </xsl:text><xsl:value-of select="name"/> { get; set; }
 	</xsl:for-each>
 </xsl:template>
+```
+
+would create the following code:
+
+```js
+public string columnName1 { get; set; }
+public string columnName2 { get; set; }
+public string columnName3 { get; set; }
 ```
 
 ## Best Practices

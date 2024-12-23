@@ -8,6 +8,7 @@ import Generate from "../components/Generate.vue";
 import ViewCode from "../components/ViewCodeNew.vue"; // Add this import
 import ModelDesigner from "../components/ModelDesigner.vue";
 import StartOptions from "../components/StartOptions.vue";
+import TemplateCreator from "../components/TemplateCreator.vue";
 
 const routes = [
   {
@@ -24,6 +25,20 @@ const routes = [
     path: "/templates",
     name: "Templates",
     component: TemplateSelector,
+  },
+  {
+    path: "/docs/:file?",
+    name: "Documentation",
+    component: () => import("../components/MarkdownViewer.vue"),
+    props: (route) => ({
+      initialFile: route.params.file || "README.md",
+      basePath: "/",
+    }),
+  },
+  {
+    path: "/template-creator",
+    name: "TemplateCreator",
+    component: TemplateCreator,
   },
   {
     path: "/generate",

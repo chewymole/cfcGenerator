@@ -79,6 +79,7 @@ const steps = [
   { name: "Templates", label: "Templates" },
   { name: "Generate", label: "Generate" },
   { name: "ViewCode", label: "View Code" },
+  { name: "Documentation", label: "Documentation" },
 ];
 
 const currentStep = computed(() => store.currentStep);
