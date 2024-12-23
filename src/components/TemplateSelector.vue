@@ -8,6 +8,13 @@
       >
         Edit Generator XML
       </button>
+
+      <button
+        class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+        @click="router.push({ name: 'TemplateCreator' })"
+      >
+        Create New Template
+      </button>
     </div>
 
     <!-- Filter column -->
@@ -19,7 +26,7 @@
       <!-- Category filter -->
       <div class="mb-4">
         <h4 class="font-medium mb-1">
-          Category
+          Language
         </h4>
         <div
           v-for="category in uniqueCategories"

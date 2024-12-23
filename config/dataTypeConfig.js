@@ -1,20 +1,33 @@
 // Supported languages configuration, update later when you add your types below
 export const SUPPORTED_LANGUAGES = [
-  { value: "cfml", label: "ColdFusion" },
-  { value: "JavaScript", label: "JavaScript" },
-  { value: "Laravel", label: "Laravel (PHP)" },
-  { value: "TypeScript", label: "TypeScript" },
-  { value: "Python", label: "Python" },
-  { value: "Java", label: "Java" },
-  { value: "C#", label: "C#" },
-  { value: "C++", label: "C++" },
-  { value: "Go", label: "Go" },
-  { value: "Ruby", label: "Ruby" },
-  { value: "Swift", label: "Swift" },
-  { value: "Kotlin", label: "Kotlin" },
-  { value: "PHP", label: "PHP" },
-  { value: "Rust", label: "Rust" },
-  { value: "Scala", label: "Scala" },
+  { value: "cfml", label: "ColdFusion", icon: "/icons/file_type_cfm.svg" },
+  {
+    value: "JavaScript",
+    label: "JavaScript",
+    icon: "/icons/file_type_js.svg",
+  },
+  {
+    value: "Laravel",
+    label: "Laravel (PHP)",
+    icon: "/icons/file_type_php.svg",
+  },
+  {
+    value: "TypeScript",
+    label: "TypeScript",
+    icon: "/icons/file_type_js.svg",
+  },
+  { value: "Python", label: "Python", icon: "/icons/file_type_python.svg" },
+  { value: "Java", label: "Java", icon: "/icons/file_type_java.svg" },
+  { value: "C#", label: "C#", icon: "/icons/file_type_cfm.svg" },
+  { value: "C++", label: "C++", icon: "/icons/file_type_cfm.svg" },
+  { value: "Go", label: "Go", icon: "/icons/file_type_go.svg" },
+  { value: "Rust", label: "Rust", icon: "/icons/file_type_rust.svg" },
+  { value: "Swift", label: "Swift", icon: "/icons/file_type_cfm.svg" },
+  { value: "Kotlin", label: "Kotlin", icon: "/icons/file_type_kotlin.svg" },
+  { value: "PHP", label: "PHP", icon: "/icons/file_type_php.svg" },
+  { value: "Rust", label: "Rust", icon: "/icons/file_type_cfm.svg" },
+  { value: "Scala", label: "Scala", icon: "/icons/file_type_cfm.svg" },
+  { value: "vue", label: "VueJS", icon: "/icons/file_type_vue.svg" },
 ];
 
 export const SUPPORTED_DATABASES = [
@@ -29,6 +42,23 @@ export const SUPPORTED_DATABASES = [
   { value: "dynamodb", label: "DynamoDB" },
   { value: "snowflake", label: "Snowflake" },
   { value: "redshift", label: "Redshift" },
+];
+
+export const TEMPLATE_STYLES = [
+  { id: "class", name: "Class" },
+  { id: "model", name: "Model" },
+  { id: "component", name: "Component" },
+  { id: "controller", name: "Controller" },
+  { id: "repository", name: "Repository" },
+  { id: "service", name: "Service" },
+  { id: "tag", name: "Tag" },
+  { id: "script", name: "Script" },
+];
+
+export const TEMPLATE_CATEGORIES = [
+  { id: "backend", name: "Backend" },
+  { id: "frontend", name: "Frontend" },
+  { id: "database", name: "Database" },
 ];
 
 // Base data types with their properties
